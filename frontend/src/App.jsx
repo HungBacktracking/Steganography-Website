@@ -13,7 +13,6 @@ const App = () => {
 	return (
 		<Router>
 			<Navbar />
-			o
 			<Routes>
 				<Route path="/" element={<HomePage />} />
 				<Route path="/steganography" element={<SteganographyPage />} />
