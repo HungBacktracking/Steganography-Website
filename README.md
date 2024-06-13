@@ -18,6 +18,12 @@
 |Architecture| MVC | |
 |Database|  | |
 
+### Run the project
+```bash
+pip install -r requirements.txt
+python app.py
+```
+
 ## Frontend
 |  | Technology | Description |
 | --- | --- | --- |
@@ -25,3 +31,9 @@
 |Framework| React | |
 |Library| vite, tailwind, ... | |
 |Architecture|  | |
+
+### Start the project
+```bash
+npm install
+npm run dev
+```
