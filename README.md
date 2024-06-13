@@ -6,7 +6,7 @@
 | row# | fullname            | email                  | git|
 |------| ------------------- | ------ | -------- | 
 |00    | Nguyễn Thị Trúc Vy  |  | |
-|01    | Võ Trung Hoàng Hưng | | https://github.com/HungBacktracking|
+|01    | Võ Trung Hoàng Hưng | hoanghung1182003@gmail.com | https://github.com/HungBacktracking|
 |02    | Tạ Công Hoàng | | https://github.com/gnaohne|
 |03    | Cao Quảng Phát | quangphat18ti@gmail.com | https://github.com/quangphat18ti |
 
