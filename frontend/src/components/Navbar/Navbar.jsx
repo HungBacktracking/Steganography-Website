@@ -1,5 +1,6 @@
 import React from 'react';
-const { NavLink } = require("react-router-dom");
+import { NavLink } from 'react-router-dom';
+import classes from './Navbar.module.css';
 
 const Navbar = () => {
     return (
@@ -23,3 +24,5 @@ const Navbar = () => {
         </div>
     )
 }
+
+export default Navbar;

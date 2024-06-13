@@ -1,13 +1,19 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar/Navbar';
 import './App.css';
+
+import Navbar from './components/Navbar/Navbar';
+import HomePage from './pages/HomePage/HomePage';
+import SteganographyPage from './pages/SteganographyPage/SteganographyPage';
+import AboutPage from './pages/AboutPage/AboutPage';
+import ContactPage from './pages/ContactPage/ContactPage';
 
 const App = () => {
 
 	return (
 		<Router>
 			<Navbar />
+			o
 			<Routes>
 				<Route path="/" element={<HomePage />} />
 				<Route path="/steganography" element={<SteganographyPage />} />
