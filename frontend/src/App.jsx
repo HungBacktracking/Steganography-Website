@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 
-import Navbar from './components/Navbar/Navbar';
+import Navbar from './layout/Navbar/Navbar';
 import HomePage from './pages/HomePage/HomePage';
 import SteganographyPage from './pages/SteganographyPage/SteganographyPage';
 import AboutPage from './pages/AboutPage/AboutPage';
