@@ -1,0 +1,40 @@
+.navbar {
+    margin: 1vw;
+    margin-left: auto;
+    margin-right: auto;
+    -webkit-transition: background-color .4s;
+    -webkit-transition: background-color .4s;
+    transition: background-color .4s;
+    font: 13px / 27px Roboto, Arial, sans-serif;
+    margin: 5vh 5vw;
+    color: rgba(255, 255, 255, 0.75);
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+.nav_link {
+    color: rgba(255, 255, 255, 0.75);
+    text-decoration: none;
+    font-size: 1.4vw;
+    font-weight: 500;
+}
+
+.active {
+    color: rgba(255, 255, 255);
+}
+
+
+.navbar-wrapper {
+    position: relative;
+    padding: 1vw;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 10vw;
+    padding-right: 10vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background: transparent;
+    z-index: 1;
+}

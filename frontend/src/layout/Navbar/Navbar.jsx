@@ -1,28 +1,28 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import classes from './Navbar.module.css';
+import './Navbar.css';
 
 const Navbar = () => {
     return (
         <div className="navbar">
             <div className="navbar-wrapper">
                 <div className="navbar-item">
-                    <NavLink className={({ isActive }) => isActive ? `${classes.nav_link} ${classes.active}` : classes.nav_link} to="/">
+                    <NavLink className={({ isActive }) => isActive ? `nav_link active` : `nav_link`} to="/">
                         Home
                     </NavLink>
                 </div>
                 <div className="navbar-item">
-                    <NavLink className={({ isActive }) => isActive ? `${classes.nav_link} ${classes.active}` : classes.nav_link} to="/steganography">
+                    <NavLink className={({ isActive }) => isActive ? `nav_link active` : `nav_link`} to="/steganography">
                         Let's Steganography
                     </NavLink>
                 </div>
                 <div className="navbar-item">
-                    <NavLink className={({ isActive }) => isActive ? `${classes.nav_link} ${classes.active}` : classes.nav_link} to="/about">
+                    <NavLink className={({ isActive }) => isActive ? `nav_link active` : `nav_link`} to="/about">
                         About
                     </NavLink>
                 </div>
                 <div className="navbar-item">
-                    <NavLink className={({ isActive }) => isActive ? `${classes.nav_link} ${classes.active}` : classes.nav_link} to="/contact">
+                    <NavLink className={({ isActive }) => isActive ? `nav_link active` : `nav_link`} to="/contact">
                         Contact
                     </NavLink>
                 </div>
