@@ -1,6 +1,7 @@
-import { useState } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import './App.css'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar/Navbar';
+import './App.css';
 
 const App = () => {
 
@@ -17,4 +18,4 @@ const App = () => {
 	)
 }
 
-export default App
+export default App;
