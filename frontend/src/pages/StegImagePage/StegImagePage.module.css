@@ -2,7 +2,7 @@
     padding: 5vh 5vw;
     display: flex;
     flex-direction: column;
-    gap: 5vh;
+    gap: 0;
 }
 
 .steg_container {
