@@ -23,6 +23,21 @@
     flex-direction: column;
 }
 
+.background-container-steg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: inherit;
+    background-size: inherit;
+    background-position: inherit;
+    filter: blur(8px); /* Làm mờ hình ảnh */
+    z-index: 0;
+}
+
+
 .overlay {
     position: absolute;
     top: 0;
@@ -41,7 +56,7 @@
 }
 
 .steg-image-page {
-    background-image: linear-gradient(to right, #434343, black);
+    background-image: url('./assets/background.png');
 }
 
 .about-page {

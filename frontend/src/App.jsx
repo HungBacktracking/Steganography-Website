@@ -18,9 +18,9 @@ const App = () => {
 			case '/':
 				return 'home-page';
 			case '/steganography':
-				return 'background-container-steg steganography-page';
+				return 'steganography-page';
 			case '/steganography/image':
-				return 'steg-image-page';
+				return 'background-container-steg steg-image-page';
 			case '/about':
 				return 'about-page';
 			case '/contact':
