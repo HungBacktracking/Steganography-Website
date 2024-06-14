@@ -1,5 +1,5 @@
 import classes from './StegImagePage.module.css';
-
+import { TwoSideTextBox } from '../../components/Box';
 
 const Decoder = ({}) => {
   return (
@@ -17,9 +17,30 @@ const DecoderLeftComponent = ({}) => {
   return (
       <div className={classes.left}>
           <div className={classes.image_container}></div>
-          <div className={classes.info}>Resolution</div>
-          <div className={classes.info}>Mode</div>
-          <div className={classes.info}>Format</div>
+          {/* <div className={classes.info}>Resolution</div> */}
+          <TwoSideTextBox 
+            titleComponent={<div className="text-[1.3vw] basis-1/3" >Resolution</div>}
+            content={"1920x1080"}
+          />
+
+          {/* <div className={classes.info}>Mode</div> */}
+          {/* <TwoSideTextBox
+            titleComponent={<div className="text-[1.3vw] basis-1/3" >Mode</div>}
+            content={"...."}
+          /> */}
+
+
+          {/* <div className={classes.info}>Format</div> */}
+          <TwoSideTextBox
+            titleComponent={<div className="text-[1.3vw] basis-1/3" >Format</div>}
+            content={"PNG"}
+          />
+
+          {/* <div className={classes.info}>Size</div> */}
+          <TwoSideTextBox
+            titleComponent={<div className="text-[1.3vw] basis-1/3" >Size</div>}
+            content={"10Mb"}
+          />
           <div className={classes.action}>
               <div className={`${classes.button_action_1} ${classes.success_}`}>Decode</div>
               <div className={`${classes.button_action_1} ${classes.destroy_}`}>Delete</div>
@@ -39,9 +60,20 @@ const DecoderRightComponent = ({}) => {
               </div>
           </div>
           <div className={classes.notepad}></div>
-          <div className={classes.info_list}>
-              <div className={classes.info_item_capacity}>Text size</div>
-              <div className={classes.info_item_path}>Path</div>
+          <div className={classes.info_list + " mt-auto"} >
+              {/* <div className={classes.info_item_capacity}>Text size</div> */}
+              <TwoSideTextBox 
+               title = "Text size"
+                content = "2.1Kb"
+                className={"flex-[70%] p-[0.7vw]"}
+              />
+
+              {/* <div className={classes.info_item_path}>Path</div> */}
+              <TwoSideTextBox
+                title = "Path"
+                content = "/home/user/Downloads"
+                className={"flex-[70%] p-[0.7vw]"}
+              />
           </div>
       </div>
   )
