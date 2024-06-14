@@ -1,0 +1,48 @@
+.container_page {
+    padding: 0 5vw;
+    display: flex;
+    flex-direction: column;
+    min-height: 125vh;
+}
+
+.content {
+    flex: 1;
+}
+
+.steg_options {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+}
+
+.steg_item {
+    padding: 3vw 2vw;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    max-width: 25vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1vw;
+    cursor: pointer;
+}
+
+.steg_item:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.title {
+    font-family: 'Roboto', sans-serif;
+    font-size: 2vw;
+    color: white;
+}
+
+.description {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.3vw;
+    color: rgba(255, 255, 255, 0.75);
+    align-self: center;
+}

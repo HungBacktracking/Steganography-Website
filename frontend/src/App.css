@@ -1,42 +1,50 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+.background-container {
+    position: relative;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-position: top ;
+    background-size: 100% 100%;
+    margin: 0; 
+    padding: 0; 
+    min-height: 100vh;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.background-container-steg {
+    position: relative;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-position: top ;
+    background-size: 100% 100%;
+    margin: 0; 
+    padding: 0; 
+    min-height: 150vh;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 1;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.home-page {
+    background-image: linear-gradient(to bottom right, #ee9ca7, black 40%, #13547a);
 }
 
-.card {
-  padding: 2em;
+.steganography-page {
+    background-image: url('./assets/background.png');
 }
 
-.read-the-docs {
-  color: #888;
+.steg-image-page {
+    background-image: linear-gradient(to right, #434343, black);
+}
+
+.about-page {
+    background-image: linear-gradient(to right, #fc5c7d, #6a82fb);
+}
+
+.contact-page {
+    background-image: linear-gradient(to right, #fc5c7d, #6a82fb);
 }
