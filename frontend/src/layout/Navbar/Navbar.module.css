@@ -15,10 +15,14 @@
     text-decoration: none;
     font-size: 1.4vw;
     font-weight: 500;
+    padding: 1vh 2vw;
+    height: 100%;
+    border-radius: 16px;
 }
 
 .active {
     color: rgba(255, 255, 255);
+    background-color: rgba(255, 255, 255, 0.5);
 }
 
 
@@ -36,4 +40,5 @@
     justify-content: space-between;
     align-items: center;
     z-index: 1;
+    /* height: 100%; */
 }
