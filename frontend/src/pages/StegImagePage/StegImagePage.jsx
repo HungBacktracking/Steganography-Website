@@ -4,8 +4,7 @@ import './StegImagePage.css';
 
 const StegImagePage = () => {
     return (
-        <div>
-            <h1>StegImagePage</h1>
+        <div className='container-page_'>
         </div>
     );
 }

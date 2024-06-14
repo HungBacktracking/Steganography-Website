@@ -1,0 +1,50 @@
+.background-container {
+    position: relative;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-position: top ;
+    background-size: 100% 100%;
+    margin: 0; 
+    padding: 0; 
+    min-height: 100vh;
+}
+
+.background-container-steg {
+    position: relative;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-position: top ;
+    background-size: 100% 100%;
+    margin: 0; 
+    padding: 0; 
+    min-height: 150vh;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 1;
+}
+
+.home-page {
+    background-image: linear-gradient(to bottom right, #ee9ca7, black 40%, #13547a);
+}
+
+.steganography-page {
+    background-image: url('./assets/background.png');
+}
+
+.steg-image-page {
+    background-image: linear-gradient(to right, #434343, black);
+}
+
+.about-page {
+    background-image: linear-gradient(to right, #fc5c7d, #6a82fb);
+}
+
+.contact-page {
+    background-image: linear-gradient(to right, #fc5c7d, #6a82fb);
+}
