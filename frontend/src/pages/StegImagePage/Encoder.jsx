@@ -41,7 +41,7 @@ const EncoderLeftComponent = ({}) => {
 
            {/* <div className={classes.info}>Size</div> */}
            <TwoSideTextBox
-            titleComponent={<div className="text-[1.3vw] basis-1/3" >Size</div>}
+            titleComponent={<div className="basis-1/3" >Size</div>}
             content={"10Mb"}
           />
 
