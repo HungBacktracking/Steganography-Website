@@ -31,7 +31,7 @@ const App = () => {
 	};
 
 	return (
-		<div className={`background-container ${getBackgroundClass()}`}>
+		<div className={`background-container flex flex-col max-h-[100vh] ${getBackgroundClass()}`}>
 			<Navbar />
 			<Routes>
 				<Route path="/" element={<HomePage />} />
