@@ -18,8 +18,9 @@ const DecoderLeftComponent = ({}) => {
       <div className={classes.left}>
           <div className={classes.image_container}></div>
           <div className={classes.info}>Resolution</div>
-          <div className={classes.info}>Mode</div>
-          <div className={classes.info}>Format</div>
+          <div className={classes.info}>Created on</div>
+          <div className={classes.info}>Payload</div>
+          <div className={classes.info}>Size</div>
           <div className={classes.action}>
               <div className={`${classes.button_action_1} ${classes.success_}`}>Decode</div>
               <div className={`${classes.button_action_1} ${classes.destroy_}`}>Delete</div>

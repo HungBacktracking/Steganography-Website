@@ -22,6 +22,7 @@ const EncoderLeftComponent = ({}) => {
           <div className={classes.info}>Resolution</div>
           <div className={classes.info}>Mode</div>
           <div className={classes.info}>Format</div>
+          <div className={classes.info}>Size</div>
           <div className={classes.action}>
               <div className={`${classes.button_action_1} ${classes.success_}`}>Encode</div>
               <div className={`${classes.button_action_1} ${classes.destroy_}`}>Delete</div>
