@@ -5,9 +5,10 @@
     -webkit-transition: background-color .4s;
     transition: background-color .4s;
     font: 13px / 27px Roboto, Arial, sans-serif;
-    padding: 5vh 5vw;
+    padding: 2vh 5vw 0vh;
     color: rgba(255, 255, 255, 0.75);
     border-radius: 10px;
+    width: 100%;
 }
 
 .nav_link {

@@ -19,22 +19,23 @@ const EncoderLeftComponent = ({}) => {
   return (
       <div className={classes.left}>
           <div className={classes.image_container}></div>
+          
           {/* <div className={classes.info}>Resolution</div> */}
           <TwoSideTextBox 
-            titleComponent={<div className="text-[1.3vw] basis-1/3" >Resolution</div>}
+            titleComponent={<div className="basis-1/3" >Resolution</div>}
             content={"1920x1080"}
           />
 
           {/* <div className={classes.info}>Mode</div> */}
           {/* <TwoSideTextBox
-            titleComponent={<div className="text-[1.3vw] basis-1/3" >Mode</div>}
+            titleComponent={<div className="basis-1/3" >Mode</div>}
             content={"...."}
           /> */}
 
 
           {/* <div className={classes.info}>Format</div> */}
           <TwoSideTextBox
-            titleComponent={<div className="text-[1.3vw] basis-1/3" >Format</div>}
+            titleComponent={<div className="basis-1/3" >Format</div>}
             content={"PNG"}
           />
 
