@@ -2,7 +2,7 @@
     padding: 0 5vw;
     display: flex;
     flex-direction: column;
-    min-height: 125vh;
+    flex-grow: 1;
 }
 
 .content {
@@ -15,10 +15,11 @@
     justify-content: space-between;
     align-items: center;
     margin-top: auto;
+    padding-bottom: 5vh;
 }
 
 .steg_item {
-    padding: 3vw 2vw;
+    padding: 3vh 2vw;
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 10px;
     max-width: 25vw;
@@ -36,7 +37,7 @@
 
 .title {
     font-family: 'Roboto', sans-serif;
-    font-size: 2vw;
+    font-size: 1.7vw;
     color: white;
 }
 

@@ -5,7 +5,9 @@ import classes from './SteganographyPage.module.css';
 const SteganographyPage = () => {
     return (
         <div className={classes.container_page}>
-            <div className={classes.content}></div>
+            <div className={classes.content}>
+                Hello
+            </div>
             <div className={classes.steg_options}>
                 <Link className={classes.steg_item} to='/steganography/image'>
                     <h2 className={classes.title}>Hidden with images</h2>
