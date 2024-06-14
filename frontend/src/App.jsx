@@ -32,16 +32,14 @@ const App = () => {
 
 	return (
 		<div className={`background-container ${getBackgroundClass()}`}>
-			<div className='overlay'>
-				<Navbar />
-				<Routes>
-					<Route path="/" element={<HomePage />} />
-					<Route path="/steganography" element={<SteganographyPage />} />
-					<Route path="/steganography/image" element={<StegImagePage />} />
-					<Route path="/about" element={<AboutPage />} />
-					<Route path="/contact" element={<ContactPage />} />
-				</Routes>
-			</div>
+			<Navbar />
+			<Routes>
+				<Route path="/" element={<HomePage />} />
+				<Route path="/steganography" element={<SteganographyPage />} />
+				<Route path="/steganography/image" element={<StegImagePage />} />
+				<Route path="/about" element={<AboutPage />} />
+				<Route path="/contact" element={<ContactPage />} />
+			</Routes>
 		</div>
 	)
 };

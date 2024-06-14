@@ -1,4 +1,4 @@
-.container-page {
+.container_page {
     padding: 0 5vw;
     display: flex;
     flex-direction: column;
@@ -9,7 +9,7 @@
     flex: 1;
 }
 
-.steg-options {
+.steg_options {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -17,7 +17,7 @@
     margin-top: auto;
 }
 
-.steg-item {
+.steg_item {
     padding: 3vw 2vw;
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 10px;
@@ -30,7 +30,7 @@
     cursor: pointer;
 }
 
-.steg-item:hover {
+.steg_item:hover {
     background-color: rgba(255, 255, 255, 0.15);
 }
 

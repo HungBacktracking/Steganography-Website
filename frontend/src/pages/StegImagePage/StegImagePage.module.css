@@ -1,0 +1,147 @@
+.container_page {
+    padding: 5vh 5vw;
+    display: flex;
+    flex-direction: column;
+    gap: 5vh;
+}
+
+.steg_container {
+    margin-top: 5vh;
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+    padding: 3vw;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    border-radius: 5px;
+}
+
+.steg_wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 3vw;
+}
+
+.left {
+    flex-basis: 30%;
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+}
+
+.title {
+    font-family: 'Roboto', sans-serif;
+    font-size: 2vw;
+    font-weight: 500;
+}
+
+.image_container {
+    height: 35vh;
+    border: 2px solid rgba(255, 255, 255);
+    border-radius: 5px;
+}
+
+.info {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.3vw;
+    font-weight: 400;
+    padding: 0.5vw 1.5vw;
+    border-radius: 5px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.action {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: auto;
+}
+
+.button_action_1 {
+    padding: 1vw 2vw;
+    border-radius: 5px;
+    cursor: pointer;
+    border: solid 2px;
+    flex-basis: 48%;
+    text-align: center;
+}
+
+.success_ {
+    border: #5a9f68 solid 2px;
+}
+
+.success_:hover {
+    background-color: rgba(90, 159, 104, 0.5);
+}
+
+.destroy_ {
+    border: #c24a4a solid 2px;
+}
+
+.destroy_:hover {
+    background-color: rgba(194, 74, 74, 0.5);
+}
+
+
+.right {
+    flex-basis: 70%;
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+}
+
+.small_title {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.5vw;
+    font-weight: 500;
+}
+
+.header_notepad {
+    display: flex;
+    flex-direction: row;
+}
+
+.action_list {
+    display: flex;
+    flex-direction: row;
+    gap: 1vw;
+}
+
+.button_action_2 {
+    padding: 0.5vw 2.5vw;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    background-color: white;
+    color: black;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.3vw;
+    font-weight: 500;
+}
+
+.notepad {
+    height: 60vh;
+    padding: 2vw 1vw;
+    border-radius: 5px;
+    border: 2px solid rgba(255, 255, 255);
+}
+
+.info_list {
+    display: flex;
+    flex-direction: row;
+    gap: 1vw;
+}
+
+.info_item_capacity {
+    flex-basis: 30%;
+    padding: 0.7vw;
+    border-radius: 5px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.info_item_path {
+    flex-basis: 70%;
+    padding: 0.7vw;
+    border-radius: 5px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+}
