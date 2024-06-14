@@ -85,3 +85,30 @@ class AudioSteganography:
         output_sound.seek(0)
 
         return output_sound
+    
+
+    def recover_data(self, sound_path, bytes_to_recover):
+        self.prepare(sound_path)
+        raw_data = list(struct.unpack(self.fmt, self.sound.readframes(self.n_frames)))
+        mask = (1 << self.num_lsb) - 1
+        data = bytearray()
+        sound_index = 0 
+        buffer = 0
+        buffer_length = 0
+        self.sound.close()
+
+        while bytes_to_recover > 0:
+            next_sample = raw_data[sound_index]
+            if next_sample != self.smallest_byte:
+                buffer += (abs(next_sample) & mask) << buffer_length
+                buffer_length += self.num_lsb
+            sound_index += 1
+            
+            while buffer_length >= 8 and bytes_to_recover > 0:
+                current_data = buffer % (1 << 8)
+                buffer >>= 8
+                buffer_length -= 8
+                data += struct.pack('1B', current_data)
+                bytes_to_recover -= 1
+
+        return data.decode('utf-8')
