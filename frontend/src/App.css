@@ -33,7 +33,7 @@
     background-image: inherit;
     background-size: inherit;
     background-position: inherit;
-    filter: blur(8px); /* Làm mờ hình ảnh */
+    filter: blur(33px); /* Làm mờ hình ảnh */
     z-index: 0;
 }
 
