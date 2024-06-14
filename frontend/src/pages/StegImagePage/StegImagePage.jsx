@@ -10,12 +10,12 @@ const StegImagePage = () => {
 
     return (
         <div className={classes.container_page + " flex flex-1"}>
-            <div className={classes.tab_container}>
+            {/* <div className={classes.tab_container}>
                 <button  className={`${classes.tab} ${activeTab === 'encode' ? classes.active : ''}`}
                     onClick={() => setActiveTab('encode')}> Encode </button>
                 <button className={`${classes.tab} ${activeTab === 'decode' ? classes.active : ''}`}
                     onClick={() => setActiveTab('decode')}> Decode </button>
-            </div>
+            </div> */}
 
             {activeTab === 'encode' ? <Encoder /> : <Decoder />}      
         </div>

@@ -11,7 +11,7 @@ const TwoSideTextBox = ({
       flex flex-row 
       overflow-hidden
       gap-4
-      `}>
+      `} style={{borderWidth: 1 + 'px', color: 'rgb(148, 163, 184)'}}>
 
         {
           titleComponent

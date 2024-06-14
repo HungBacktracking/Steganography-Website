@@ -5,7 +5,10 @@ const Encoder = ({}) => {
   return (
       <div className={classes.steg_container}>
           {/* Title */}
-          <div className={classes.title}> Encode </div>
+          <div className={classes.list_title}>
+            <div className={ `${classes.title_active} ${classes.title}`}>Encode</div>
+            <div className={classes.title}>Decode</div>
+          </div>
           
           <div className={classes.steg_wrapper}>
               <EncoderLeftComponent />
