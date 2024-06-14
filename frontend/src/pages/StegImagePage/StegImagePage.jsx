@@ -9,7 +9,7 @@ const StegImagePage = () => {
     const [activeTab, setActiveTab] = useState('encode');
 
     return (
-        <div className={classes.container_page}>
+        <div className={classes.container_page + " flex flex-1"}>
             <div className={classes.tab_container}>
                 <button  className={`${classes.tab} ${activeTab === 'encode' ? classes.active : ''}`}
                     onClick={() => setActiveTab('encode')}> Encode </button>
