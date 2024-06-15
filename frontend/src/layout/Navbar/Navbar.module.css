@@ -5,7 +5,7 @@
     -webkit-transition: background-color .4s;
     transition: background-color .4s;
     font: 13px / 27px Roboto, Arial, sans-serif;
-    padding: 2vh 2vw 0vh;
+    padding: 0vh 2vw;
     color: rgb(51 65 85);
     border-radius: 10px;
     width: 100%;
