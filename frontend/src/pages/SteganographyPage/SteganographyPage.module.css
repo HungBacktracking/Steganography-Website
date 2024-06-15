@@ -4,6 +4,7 @@
     flex-direction: column;
     flex-grow: 1;
     z-index: 1;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(15 23 42 / 0.04)'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e");
 }
 
 .content {
@@ -21,7 +22,7 @@
 
 .steg_item {
     padding: 3vh 2vw;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0);
     border-radius: 10px;
     max-width: 25vw;
     display: flex;
@@ -33,18 +34,26 @@
 }
 
 .steg_item:hover {
-    background-color: rgba(255, 255, 255, 0.15);
+    background-color: rgba(255, 255, 255, 1);
+    --tw-shadow: 0 20px 25px -5px #0000001a, 0 8px 10px -6px #0000001a;
+    --tw-shadow-colored: 0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+    z-index: 10;
 }
 
 .title {
-    font-family: 'Roboto', sans-serif;
-    font-size: 1.7vw;
-    color: white;
+    font-family: Inter var, ui-sans-serif, system-ui, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+    font-size: 1.2rem;
+    line-height: 1.5rem;
+    color: rgb(15 23 42);
+    letter-spacing: -.025em;
+    font-weight: 600;
 }
 
 .description {
-    font-family: 'Roboto', sans-serif;
     font-size: 1.3vw;
-    color: rgba(255, 255, 255, 0.75);
+    color: #334155;
     align-self: center;
+    font-size: 1rem;
+    line-height: 1.5;
 }
