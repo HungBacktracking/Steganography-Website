@@ -47,10 +47,6 @@
     z-index: 1;
 }
 
-.home-page {
-    background-image: linear-gradient(to bottom right, #ee9ca7, black 40%, #13547a);
-}
-
 .steganography-page {
     background-image: url('./assets/background.jpg');
 }
