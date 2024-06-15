@@ -17,7 +17,7 @@ const StegImagePage = () => {
                     onClick={() => setActiveTab('decode')}> Decode </button>
             </div> */}
 
-            {activeTab === 'encode' ? <Encoder /> : <Decoder />}      
+            {activeTab === 'encode' ? <Encoder setActiveTab={setActiveTab} /> : <Decoder setActiveTab={setActiveTab}/>}      
         </div>
     );
 }

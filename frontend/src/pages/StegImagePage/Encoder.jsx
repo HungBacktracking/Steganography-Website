@@ -1,13 +1,13 @@
 import classes from './StegImagePage.module.css';
 import { TwoSideTextBox } from '../../components/Box';
 
-const Encoder = ({}) => {
+const Encoder = ({ setActiveTab }) => {
   return (
       <div className={classes.steg_container}>
           {/* Title */}
           <div className={classes.list_title}>
             <div className={ `${classes.title_active} ${classes.title}`}>Encode</div>
-            <div className={classes.title}>Decode</div>
+            <div className={classes.title} onClick={() => setActiveTab('decode')}>Decode</div>
           </div>
           
           <div className={classes.steg_wrapper}>
