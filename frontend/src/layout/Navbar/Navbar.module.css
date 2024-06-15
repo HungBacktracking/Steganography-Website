@@ -18,6 +18,15 @@
     gap: 1vw;
 }
 
+.logo {
+    display: flex;
+    align-items: center;
+    width: 26px; 
+    height: 26px;
+    background: url('../../assets/logo.png') no-repeat center center;
+    background-size: cover;
+}
+
 .navbar_home {
     color: black;
     font-size: 1.3rem;
