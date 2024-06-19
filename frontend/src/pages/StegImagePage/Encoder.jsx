@@ -1,8 +1,10 @@
+import { useCallback, useRef, useState } from 'react';
+import { toast } from 'react-toastify';
+
 import classes from './StegImagePage.module.css';
 import { TwoSideTextBox } from '../../components/Box';
 import { PasswordPopup } from '../../components/Popup';
-import { useCallback, useRef, useState } from 'react';
-import { toast } from 'react-toastify';
+import { TextData } from '../../entities';
 
 const PASSWORD_POPUP = 'passwordPopup';
 
@@ -25,12 +27,24 @@ const Encoder = ({ setActiveTab }) => {
         }));
   };
   const isOpen = (popupName) => showPopup[popupName] || false;
-      
+     
+  const [isEncode, setIsEncode] = useState(true);
+
   const [imageObject, setImageObject] = useState(null);
 
-  const handleEncode = (base64encodeData, password) => {
+  const handleEncode = async (base64encodeData, password) => {
+    console.log("Handle Encode");
+
+    setIsEncode(true);
+    await new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve();
+      }, 1000);
+    });
+    setIsEncode(false);
+
     if(!base64encodeData) {
-      
+      toast.error("No data to encode. Please try again.");
     }
   }
 
