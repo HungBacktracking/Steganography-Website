@@ -49,6 +49,7 @@ const Encoder = ({ setActiveTab }) => {
     }
   }
 
+  const [messageContent, setMessageContent] = useState("");
 
   return (
       <div className={classes.steg_container}>
@@ -62,7 +63,11 @@ const Encoder = ({ setActiveTab }) => {
               <EncoderLeftComponent 
                 togglePopup={togglePopup}
               />
-              <EncoderRightComponent />
+
+              <EncoderRightComponent 
+                messageContent={messageContent}
+                setMessageContent={setMessageContent}   
+              />
           </div>
 
           <div>
@@ -191,19 +196,131 @@ const EncoderLeftComponent = ({
   );
 }
 
-const EncoderRightComponent = ({}) => {
+class EncodeImageFile {
+  static MAX_SIZE_IN_BYTE = 1024 * 1024; // 1 MB
+
+  constructor(file) {
+    this.filePath = file.filePath;
+    this.fileSize = file.fileSize;
+    this.content  = file.content;
+  }
+
+  static _checkFileType(file) {
+    if (file.type !== 'text/plain') {
+      return "Invalid file type. Please upload a text file.";
+    }
+    return null;
+  }
+
+  static _checkFileSize(file) {
+    if (EncodeImageFile.MAX_SIZE_IN_BYTE > 0 && file.size > EncodeImageFile.MAX_SIZE_IN_BYTE) {
+      return "File size exceeds the limit. Please upload a smaller file.";
+    }
+    return null;
+  }
+
+  static checkFileError(file) {
+    let checkError = EncodeImageFile._checkFileType(file) 
+                  || EncodeImageFile._checkFileSize(file);
+  
+    return checkError;
+  }
+
+  static async readFile(file) {
+    // Read the file
+    try{
+      const fileInfo = {};
+      // fileInfo.filePath = file.webkitRelativePath || file.path || file.name; // Get path or name
+      // fileInfo.fileSize = file.size;
+
+      // Read path of file and save to fileInfo
+
+      const reader = new FileReader();
+
+      // Await to read the file and get the content
+      const content = await new Promise((resolve, reject) => {
+        reader.onload = (e) => {
+          console.log("File content: ", e.target.result);
+          resolve(e.target.result);
+        }
+        reader.onerror = (e) => {
+          reject(e);
+        }
+        reader.readAsText(file);
+      });
+
+      fileInfo.content = content;
+      return {
+        data: new EncodeImageFile(fileInfo),
+        error: null,
+      }
+    }catch(err){  
+      console.log("Error: ", err);
+      return {
+        data: null,
+        error: "Failed to read the file. Please try again.",
+      }
+    }
+  }
+}
+
+const EncoderRightComponent = ({
+  messageContent,
+  setMessageContent,
+}) => {
+  const handleFileChange = async (e) => {
+    console.log("File full path: ", e.target.value);
+    if (!e.target.files || e.target.files.length === 0) return;
+  
+    const file = e.target.files[0];
+    console.log("file choose: ", file);
+
+    // Check Condition
+    const checkError = EncodeImageFile.checkFileError(file);
+    if (checkError) {
+      toast.error(checkError);
+      return;
+    }
+
+    // Read the file
+    let readFileResponse = await EncodeImageFile.readFile(file);
+    if (readFileResponse.error) {
+      toast.error(readFileResponse.error);
+      return;
+    }
+
+    let fileObject = readFileResponse.data;
+    console.log("fileObject: ", fileObject);
+    setMessageContent(fileObject.content);
+  }
+
   return (
       <div className={classes.right}>
           <div className={classes.header_notepad}>
               <div className={classes.small_title}>Notepad</div>
               <div className={`${classes.action_list} ms-auto`}>
-                  <div className={classes.button_action_2}>Open</div>
+                  <div className={classes.button_action_2}
+                    onClick={(e) => {
+                      e.target.nextElementSibling.click();
+                    } }>
+                    Open
+                  </div>
+                  <input type="file" style={{ display: 'none' }} 
+                    accept=".txt"
+                    onChange={handleFileChange}
+                    multiple={false}
+                  />
                   <div className={classes.button_action_2}>Save</div>
                   <div className={classes.button_action_2}>Save as</div>
                   <div className={classes.button_action_2}>New</div>
               </div>
           </div>
-          <div className={classes.notepad}></div>
+          <textarea 
+            className={classes.notepad} 
+            onChange={(e) => { setMessageContent(e.target.value) }}
+            value={messageContent}
+          >
+          </textarea>
           <div className={classes.info_list + " mt-auto"}>
               {/* <div className={classes.info_item_capacity}>Capacity</div> */}
               <TwoSideTextBox className={"flex-[70%] p-[0.7vw]"} title="Capacity" content="2.1Kb/ 10Kb" />
