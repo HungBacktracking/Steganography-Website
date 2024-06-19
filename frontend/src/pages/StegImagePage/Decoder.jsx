@@ -40,7 +40,7 @@ const DecoderLeftComponent = ({}) => {
       const reader = new FileReader();
       reader.onload = (e) => {
         setImage(e.target.result);
-        alert("File uploaded successfully!");
+        // alert("File uploaded successfully!");
 
         // Get image resolution
         const img = new Image();
