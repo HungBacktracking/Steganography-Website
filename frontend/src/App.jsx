@@ -1,5 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Navbar from './layout/Navbar/Navbar';
 import HomePage from './pages/HomePage/HomePage';
@@ -15,6 +17,7 @@ const App = () => {
 	return (
 		<Router>
 			<Navbar />
+			<ToastContainer />
 			<Routes>
 				<Route path="/" element={<HomePage />} />
 				<Route path="/steganography" element={<SteganographyPage />} />

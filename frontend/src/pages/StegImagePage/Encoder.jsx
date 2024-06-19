@@ -1,8 +1,40 @@
 import classes from './StegImagePage.module.css';
 import { TwoSideTextBox } from '../../components/Box';
-import { useRef, useState } from 'react';
+import { PasswordPopup } from '../../components/Popup';
+import { useCallback, useRef, useState } from 'react';
+import { toast } from 'react-toastify';
+
+const PASSWORD_POPUP = 'passwordPopup';
+
+class ImageData {
+  constructor(image) {
+    this.name         = image.name;
+    this.base64encode = image.base64encode;
+    this.resolution   = image.resolution;
+    this.format       = image.format;
+    this.size         = image.size;
+  }
+}
 
 const Encoder = ({ setActiveTab }) => {
+  const [showPopup, setShowPopup] = useState(false);
+  const togglePopup = (popupName) => {
+        setShowPopup((prevState) => ({
+          ...prevState,
+          [popupName]: !prevState[popupName]
+        }));
+  };
+  const isOpen = (popupName) => showPopup[popupName] || false;
+      
+  const [imageObject, setImageObject] = useState(null);
+
+  const handleEncode = (base64encodeData, password) => {
+    if(!base64encodeData) {
+      
+    }
+  }
+
+
   return (
       <div className={classes.steg_container}>
           {/* Title */}
@@ -12,14 +44,35 @@ const Encoder = ({ setActiveTab }) => {
           </div>
           
           <div className={classes.steg_wrapper}>
-              <EncoderLeftComponent />
+              <EncoderLeftComponent 
+                togglePopup={togglePopup}
+              />
               <EncoderRightComponent />
+          </div>
+
+          <div>
+            {
+              isOpen(PASSWORD_POPUP) && (
+                <PasswordPopup
+                  onConfirm={(password) => {
+                    handleEncode("data", password);
+                  }
+                }
+                  onCancel={() => {
+                    toast.warning("Encode canceled");
+                  }}
+                  onClose={() => togglePopup(PASSWORD_POPUP)}
+                />
+              )
+            }
           </div>
       </div>
   )
 }
 
-const EncoderLeftComponent = ({}) => {
+const EncoderLeftComponent = ({
+  togglePopup,
+}) => {
 
   const fileInput = useRef(null);
   const [image, setImage] = useState(null);
@@ -102,7 +155,14 @@ const EncoderLeftComponent = ({}) => {
           />
 
           <div className={classes.action}>
-              <div className={`${classes.button_action_1} ${classes.success_}`}>Encode</div>
+
+              <div 
+                className={`${classes.button_action_1} ${classes.success_}`}
+                onClick={() => togglePopup(PASSWORD_POPUP)}
+              >
+                Encode
+              </div>
+              
               <div className={`${classes.button_action_1} ${classes.destroy_}`}>Delete</div>
           </div>
       </div>
