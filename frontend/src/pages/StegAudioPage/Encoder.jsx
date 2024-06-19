@@ -22,85 +22,94 @@ const Encoder = ({ setActiveTab }) => {
 const EncoderLeftComponent = ({}) => {
 
   const fileInput = useRef(null);
-  const [image, setImage] = useState(null);
-  const [imageResolution, setImageResolution] = useState("N/A");
-  const [imageFormat, setImageFormat] = useState("N/A");
-  const [imageSize, setImageSize] = useState("N/A");
+  const [audio, setAudio] = useState(null);
+  const [audioSize, setAudioSize] = useState("N/A");
+  const audioFormat = "WAV";
+  const [audioTime, setAudioTime] = useState("N/A");
 
-  const handleImageContainerClick = () => {
+  const handleAudioContainerClick = () => {
     fileInput.current.click();
-  }
+  };
 
   const handleFileSelection = (e) => {
     const file = e.target.files[0];
-    
     if (file) {
-      // Set the image to be displayed
-      setImageFormat(file.type.split('/')[1].toUpperCase());
-      setImageSize((file.size / 1024 / 1024).toFixed(2) + 'Mb'); // Convert bytes to megabytes
-
+      const fileName = file.name;
+      
+      const fileExtension = fileName.split('.').pop().toLowerCase();
+      if (fileExtension !== 'wav') {
+        alert('Only WAV files are allowed.');
+        return;
+      }
+      
       const reader = new FileReader();
-      reader.onload = (e) => {
-        setImage(e.target.result);
-        // alert("File uploaded successfully!");
+      reader.onload = () => {
+        setAudio(reader.result);
+        setAudioSize((file.size / (1024 * 1024)).toFixed(2) + " MB");
 
-        // Get image resolution
-        const img = new Image();
-        img.onload = () => {
-          setImageResolution(`${img.width}x${img.height}`);
+        // Get audio duration
+        const audio = new Audio(reader.result);
+        audio.onloadedmetadata = () => {
+          setAudioTime(audio.duration);
         };
-        img.src = e.target.result;
-      };
-
+      }
       reader.readAsDataURL(file);
-      console.log(file);
-      // do something with the file
+    } else {
+      alert('No file selected!');
+    }
+  };
 
-    }
-    else {
-      alert("Failed to upload file. Please try again.");
-      console.log("No file selected");
-    }
+  const formatDuration = (seconds) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secondsLeft = Math.floor(seconds % 60);
+  
+    const paddedHours = hours.toString().padStart(2, '0');
+    const paddedMinutes = minutes.toString().padStart(2, '0');
+    const paddedSeconds = secondsLeft.toString().padStart(2, '0');
+  
+    return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
   };
 
   return (
       <div className={classes.left}>
-          <div className={classes.image_container} onClick={handleImageContainerClick}>
-            {image ? (<img src={image} alt="Uploaded" style={{ maxWidth: '100%', maxHeight: '100%' }} />
-            ) : (
-              <div className={classes.uploadPrompt}>Click to upload an image</div>
-            )}
-            <input
-              type="file"
-              ref={fileInput}
-              onChange={handleFileSelection}
-              style={{ display: 'none' }}
-              accept="image/*" // Accept only images
-            />
-          </div>
+        <div className={`${classes.audio_container} ${audio ? classes.audio_uploaded : ''}`} onClick={handleAudioContainerClick}>
+          {audio ? (
+            <audio controls src={audio} style={{ maxWidth: '100%', maxHeight: 'auto'}} />
+          ) : (
+            <div className={classes.uploadPrompt}>Click to upload an audio file</div>
+          )}
+          <input
+            type="file"
+            accept=".wav" // Accept only .wav files
+            style={{ display: 'none' }} // Hide the file input
+            onChange={handleFileSelection}
+            ref={fileInput}
+          />
+        </div>
           
-          {/* <div className={classes.info}>Resolution</div> */}
+          {/* <div className={classes.info}>Duration</div> */}
           <TwoSideTextBox 
-            titleComponent={<div className="basis-1/3" >Resolution</div>}
-            content={imageResolution}
+            titleComponent={<div className="basis-1/3" >Duration</div>}
+            content={formatDuration(audioTime)}
           />
 
           {/* <div className={classes.info}>Format</div> */}
           <TwoSideTextBox
             titleComponent={<div className="basis-1/3" >Format</div>}
-            content={imageFormat}
+            content={audioFormat}
           />
 
            {/* <div className={classes.info}>Size</div> */}
            <TwoSideTextBox
             titleComponent={<div className="basis-1/3" >Size</div>}
-            content={imageSize}
+            content={audioSize}
           />
 
-          <div className={classes.action}>
-              <div className={`${classes.button_action_1} ${classes.success_}`}>Encode</div>
-              <div className={`${classes.button_action_1} ${classes.destroy_}`}>Delete</div>
-          </div>
+        <div className={classes.action}>
+            <div className={`${classes.button_action_1} ${classes.success_}`}>Encode</div>
+            <div className={`${classes.button_action_1} ${classes.destroy_}`}>Delete</div>
+        </div>
       </div>
   );
 }
