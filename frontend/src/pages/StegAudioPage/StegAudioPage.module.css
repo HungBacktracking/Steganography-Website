@@ -61,16 +61,28 @@
     cursor: pointer;
 }
 
-.image_container {
+.audio_container {
     /* height: 35vh; */
     flex: 1;
     border: 2px dashed rgba(0, 0, 0, 0.5); /* Chuyển sang màu viền đen */
     border-radius: 5px;
-    background-image: url('../../assets/upload_image.png');
+    background-image: url('../../assets/upload_audio.png');
     background-repeat: no-repeat;
     background-size: 30%;
     background-position: center 7vh;
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.audio_uploaded {
+    padding: 0 !important;
+    margin: 0 !important;
+    background-image: none !important; /* Remove background image */
+    /* border: none !important; */
+    width: 100%;
+    height: fit-content;
 }
 
 .uploadPrompt {
@@ -83,7 +95,7 @@
     text-align: center;
 }
 
-.image_container:hover {
+.audio_container:hover {
     border-color: #b3000c; /* Darker blue on hover */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow for depth */
     background-color: rgba(255, 255, 255, 0.8); /* Slightly change background color */

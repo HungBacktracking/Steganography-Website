@@ -109,7 +109,7 @@ const EncoderLeftComponent = ({
       const reader = new FileReader();
       reader.onload = (e) => {
         setImage(e.target.result);
-        alert("File uploaded successfully!");
+        // alert("File uploaded successfully!");
 
         // Get image resolution
         const img = new Image();
@@ -133,7 +133,10 @@ const EncoderLeftComponent = ({
   return (
       <div className={classes.left}>
           <div className={classes.image_container} onClick={handleImageContainerClick}>
-            {image && <img src={image} alt="Uploaded" style={{ maxWidth: '100%', maxHeight: '100%' }} />}
+            {image ? (<img src={image} alt="Uploaded" style={{ maxWidth: '100%', maxHeight: '100%' }} />
+            ) : (
+              <div className={classes.uploadPrompt}>Click to upload an image</div>
+            )}
             <input
               type="file"
               ref={fileInput}
