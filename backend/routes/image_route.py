@@ -9,8 +9,8 @@ def get_image_encoded():
     return get_image_encoded(request.json) # Example of how to use the audio function from the controller
 
 @image.route("/image/decoded", methods=["POST"])
-def get_audio_decoded():
-    return get_audio_decoded(request.json) # Example of how to use the audio function from the controller
+def get_image_decoded():
+    return get_image_decoded(request.json) # Example of how to use the audio function from the controller
 
 
 
