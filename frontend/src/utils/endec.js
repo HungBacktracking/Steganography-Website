@@ -4,6 +4,7 @@ import CryptoJS from "crypto-js";
 // using CryptoJS to encode with UTF-8 => return binaryString
 export function textToBinary(text) {
  //text => binary String 
+ if (text === null) return "";
  return CryptoJS.enc.Utf8.parse(text).toString(CryptoJS.enc.Base64);
   return CryptoJS.enc.Utf8.parse(text).toString();
 }
@@ -11,6 +12,7 @@ export function textToBinary(text) {
 
 export function binaryToTextUTF8(binaryString) {
   // binaryString = binary.toString();
+  if (binaryString === null) return "";
   return CryptoJS.enc.Utf8.stringify(CryptoJS.enc.Base64.parse(binaryString));
 }
 

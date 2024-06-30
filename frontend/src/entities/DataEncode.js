@@ -19,6 +19,11 @@ class DataEncode {
     this.cipherText = null;
   }
 
+  static fromCipherText(cipherText, binaryKey) {
+    let data = new DataEncode(null, binaryKey);
+    data.cipherText = cipherText;
+  }
+
   // Return: base64
   encrypt() {
     this.cipherText = encryptAES(this.binaryMessage, this.binaryKey);
@@ -26,8 +31,8 @@ class DataEncode {
   }
 
   decrypt() {
-    let binaryMessage = decryptAES(this.cipherText, this.binaryKey);
-    return binaryMessage;
+    this.binaryMessage = decryptAES(this.cipherText, this.binaryKey);
+    return this.binaryMessage;
   }
 }
 

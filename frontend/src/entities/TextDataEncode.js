@@ -8,6 +8,12 @@ class TextDataEncode extends DataEncode {
     super(textToBinary(text), textToBinary(password)); 
   }
 
+  static fromCipherText(cipherText, password) {
+    let data = new TextDataEncode(null, password);
+    data.cipherText = cipherText;
+    return data;
+  }
+
   encrypt() {
     return super.encrypt();
   }

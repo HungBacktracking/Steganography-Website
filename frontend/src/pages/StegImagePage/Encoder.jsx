@@ -48,6 +48,7 @@ const encode = async (imageData, textData, password) => {
   console.log("Cipher Text: ", cipherText);
   let data = await ImageServices.embeddMessage(imageData.base64encode, cipherText);
   console.log("Data: ", data);
+  return data;
 }
 
 const Encoder = ({ setActiveTab }) => {
@@ -83,7 +84,17 @@ const Encoder = ({ setActiveTab }) => {
   const handleEncode = async (imageData, textData, password) => {
     setIsEncoding(true);
     try {
-      await encode(imageData, textData, password);
+      let data = await encode(imageData, textData, password);
+      if(!data) {
+        toast.error("Failed to encode. Please try again.");
+        return;
+      }
+      toast.success("Encode successfully");
+      // download this image 
+      const downloadLink = document.createElement('a');
+      downloadLink.href = data.image;
+      downloadLink.download = 'encoded_image.png';
+      downloadLink.click();
     } catch (err) {
       console.log("Error: ", err);
       toast.error("Failed to encode. Please try again.");

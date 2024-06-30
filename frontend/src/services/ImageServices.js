@@ -16,8 +16,26 @@ const embeddMessage = async (base64Data, message) => {
   }
 }
 
+
+
+const decodeMessage = async (base64Data) => {
+  // Dummy sample code
+  let data = {
+    image: base64Data
+  };
+  try{
+    let response = await http.post("/image/decoded", data);
+    return response.data;
+  }
+  catch(e){
+    console.log(e);
+    return null;
+  }
+}
+
 const ImageServices = {
-  embeddMessage
+  embeddMessage,
+  decodeMessage
 };
 
 export default ImageServices;
