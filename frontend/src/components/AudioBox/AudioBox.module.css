@@ -1,0 +1,90 @@
+.audioBox {
+    padding: 1.5rem;
+    margin: 2rem;
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background-color: white;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+}
+
+.name {
+    font-weight: 500;
+    font-size: 1.2rem;
+}
+
+.action_list {
+    margin-left: auto;
+}
+
+.delete {
+    margin-inline-start: auto;
+    cursor: pointer;
+    padding: 0.2rem 0.8rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.author {
+    font-size: 1rem;
+    color: #666;
+}
+
+.playback {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.play_button {
+    padding: 0.5rem;
+    height: 2.5rem;
+    width: 2.5rem;
+    border-radius: 999px;
+    background-color: #f4f5f6;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+
+}
+
+.progress {
+    margin-left: 1rem;
+    height: 1vh;
+    width: 100%;
+    background-color: blueviolet;
+    border-radius: 10px;
+}
+
+.bottomLine {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: row;
+
+}
+
+.list_tag {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-right: 1rem;
+    gap : 0.5rem;
+}
+
+.tag {
+    padding: 0.2rem 0.8rem;
+    border-radius: 5px;
+    font-size: 1rem;
+    background-color: #f4f5f6;
+}
+
+.time {
+    margin-inline-start: auto;
+}
