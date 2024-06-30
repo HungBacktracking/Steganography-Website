@@ -5,9 +5,6 @@ import { toast } from 'react-toastify';
 import { TextDataEncode } from '../../entities';
 import ImageData from './ImageData';
 
-// Asset
-import { UploadImage } from '../../assets';
-
 // Component
 import classes from './StegImagePage.module.css';
 import { TwoSideTextBox } from '../../components/Box';
@@ -112,11 +109,7 @@ const Encoder = ({ setActiveTab }) => {
 
     const fileInput = useRef(null);
 
-    const handleImageContainerClick = () => {
-      fileInput.current.click();
-    }
-
-    const handleFileSelection = (e) => {
+    const readDataUploaded = (e) => {
       const file = e.target.files[0];
 
       if (file) {
@@ -140,8 +133,6 @@ const Encoder = ({ setActiveTab }) => {
         };
 
         reader.readAsDataURL(file);
-        // do something with the file
-
       }
       else {
         toast.error("Failed to upload file. Please try again.");
@@ -154,7 +145,7 @@ const Encoder = ({ setActiveTab }) => {
         {/* Image Container */}
         { 
           imageData.base64encode ? ( <img src={imageData.base64encode} alt="Uploaded" /> ) : (
-            <UploadComponent handleFileSelection={handleFileSelection} fileInput={fileInput} />
+            <UploadComponent readDataUploaded={readDataUploaded} fileInput={fileInput} />
           )
         }
 
@@ -177,7 +168,7 @@ const Encoder = ({ setActiveTab }) => {
         />
 
         <div className={classes.action}>
-
+          {/* Encode button */}
           <div
             className={`${classes.button_action_1} ${classes.success_}`}
             onClick={() => togglePopup(PASSWORD_POPUP)}
@@ -185,7 +176,14 @@ const Encoder = ({ setActiveTab }) => {
             Encode
           </div>
 
-          <div className={`${classes.button_action_1} ${classes.destroy_}`}>Delete</div>
+          {/* Delete button */}
+          <div 
+            className={`${classes.button_action_1} ${classes.destroy_}`} 
+            onClick={() => setImageData(new ImageData({}))}
+          >
+            Delete
+          </div>
+        
         </div>
       </div>
     );
@@ -250,11 +248,11 @@ const Encoder = ({ setActiveTab }) => {
         >
         </textarea>
         <div className={classes.info_list + " mt-auto"}>
-          {/* <div className={classes.info_item_capacity}>Capacity</div> */}
+          {/* Capacity */}
           <TwoSideTextBox className={"flex-[70%] p-[0.7vw]"} title="Capacity"
             content={message.size ? `${message.size}B/ 10Kb` : `2.1Kb/ 10Kb`}
           />
-          {/* <div className={classes.info_item_path}>Path</div> */}
+          {/* Path */}
           <TwoSideTextBox className={"flex-[70%] p-[0.7vw]"} title="Name" content={message.name || `D:\\path\\sub_path`} />
         </div>
       </div>

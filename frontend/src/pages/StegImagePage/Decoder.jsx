@@ -1,11 +1,12 @@
 import classes from './StegImagePage.module.css';
 import { TwoSideTextBox } from '../../components/Box';
 import { useRef, useState } from 'react';
-import { UploadImage } from '../../assets';
 import { toast } from 'react-toastify';
 import ImageData from './ImageData';
+
 import { ImageServices } from '../../services';
 import { TextDataEncode } from '../../entities';
+import { UploadComponent } from '../../components/UploadComponent';
 
 import { PasswordPopup, Spinner } from '../../components/Popup';
 
@@ -44,7 +45,7 @@ const Decoder = ({ setActiveTab }) => {
     setIsDecoding(true);
     try{
       let cipherText = await decode(imageData);
-      console.log("cipherText: ", cipherText);
+      // console.log("cipherText: ", cipherText);
       // console.log("password: ", password);
       let textData = TextDataEncode.fromCipherText(cipherText, password);
       let message = textData.decrypt();
@@ -58,7 +59,7 @@ const Decoder = ({ setActiveTab }) => {
       setMessage(message);
     }
     catch(e){
-      console.log(e);
+      // console.log(e);
       toast.error("Failed to decode the message. Please try again.");
     }
     finally{
@@ -86,34 +87,31 @@ const Decoder = ({ setActiveTab }) => {
       fileInput.current.click();
     }
   
-    const handleFileSelection = (e) => {
+    const readImageData = (e) => {
       const file = e.target.files[0];
       
       if (file) {
         const reader = new FileReader();
         reader.onload = (e) => {
-          const image = new Image();
-          image.onload = () => {
+          const img = new Image();
+          img.onload = () => {
             const imageData = new ImageData({
               name: file.name,
               base64encode: e.target.result,
-              resolution: `${image.width} x ${image.height}`,
+              resolution: `${img.width} x ${img.height}`,
               format: file.type,
               size: file.size
             });
             setImageData(imageData);
           };
   
-          image.src = e.target.result;
+          img.src = e.target.result;
         };
         reader.onerror = (e) => {
           toast.error("Failed to upload file. Please try again.");
         }
   
         reader.readAsDataURL(file);
-        console.log(file);
-        // do something with the file
-  
       }
       else {
         toast.error("Failed to upload file. Please try again.");
@@ -124,23 +122,12 @@ const Decoder = ({ setActiveTab }) => {
   
     return (
         <div className={classes.left}>
-            <div className={classes.image_container} onClick={handleImageContainerClick}>
-                <div className={classes.uploadPrompt}>
-                  {imageData.base64encode
-                  ? (<img src={imageData.base64encode} className='min-h-[100%]' alt="Uploaded" />)
-                  : (<>
-                    <img src={UploadImage} className='pt-4 min-h-[60%]' alt="Upload" />
-                    <p className="p-4">Click to upload an image</p>
-                  </>)}
-                </div>
-              <input
-                type="file"
-                ref={fileInput}
-                onChange={handleFileSelection}
-                style={{ display: 'none' }}
-                accept="image/*" // Accept only images
-              />
-            </div>
+            {/* Image Container */}
+            { 
+              imageData.base64encode ? ( <img src={imageData.base64encode} alt="Uploaded" /> ) : (
+                <UploadComponent readDataUploaded={readImageData} fileInput={fileInput} />
+              )
+            }
   
             {/* Resolution */}
             <TwoSideTextBox 
@@ -159,13 +146,21 @@ const Decoder = ({ setActiveTab }) => {
               titleComponent={<div className="basis-1/3" >Size</div>}
               content={imageData.size}
             />
+            
             <div className={classes.action}>
-                <div className={`${classes.button_action_1} ${classes.success_}`}
-                  onClick={() => togglePopup(PASSWORD_POPUP)}
-            >
-              Decode
-            </div>
-                <div className={`${classes.button_action_1} ${classes.destroy_}`}>Delete</div>
+              {/* Decode button */}
+              <div className={`${classes.button_action_1} ${classes.success_}`}
+                onClick={() => togglePopup(PASSWORD_POPUP)}
+              >
+                Decode
+              </div>
+              
+              {/* Delete button */}
+              <div className={`${classes.button_action_1} ${classes.destroy_}`} 
+                onClick={() => { setImageData(new ImageData({})); setMessage(""); }}
+              >
+                Delete
+              </div>
             </div>
         </div>
     )
@@ -188,14 +183,14 @@ const Decoder = ({ setActiveTab }) => {
               {message}
             </div>
             <div className={classes.info_list + " mt-auto"} >
-                {/* <div className={classes.info_item_capacity}>Text size</div> */}
+                {/* Text size */}
                 <TwoSideTextBox 
                  title = "Text size"
                   content = "2.1Kb"
                   className={"flex-[70%] p-[0.7vw]"}
                 />
   
-                {/* <div className={classes.info_item_path}>Path</div> */}
+                {/* Path */}
                 <TwoSideTextBox
                   title = "Path"
                   content = "/home/user/Downloads"
