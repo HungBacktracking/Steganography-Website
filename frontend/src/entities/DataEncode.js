@@ -17,22 +17,16 @@ class DataEncode {
     this.binaryMessage = binaryMessage;
     this.binaryKey = binaryKey;
     this.cipherText = null;
-
-    console.log("DataEncode constructor");
-    console.log(this.binaryMessage);
-    console.log(this.binaryKey);
   }
 
   // Return: base64
   encrypt() {
     this.cipherText = encryptAES(this.binaryMessage, this.binaryKey);
-    console.log("cipherText: ", this.cipherText);
     return this.cipherText;
   }
 
   decrypt() {
     let binaryMessage = decryptAES(this.cipherText, this.binaryKey);
-    console.log("binaryMessage: ", binaryMessage);
     return binaryMessage;
   }
 }

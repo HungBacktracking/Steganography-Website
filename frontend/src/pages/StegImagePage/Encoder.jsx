@@ -13,6 +13,9 @@ import classes from './StegImagePage.module.css';
 import { TwoSideTextBox } from '../../components/Box';
 import { PasswordPopup, Spinner } from '../../components/Popup';
 
+// Service
+import { ImageServices } from '../../services';
+
 const PASSWORD_POPUP = 'passwordPopup';
 
 const encode = async (imageData, textData, password) => {
@@ -32,18 +35,19 @@ const encode = async (imageData, textData, password) => {
   }
 
   // Fake Encode
-  await new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve();
-    }, 2000);
-  });
+  // await new Promise((resolve, reject) => {
+  //   setTimeout(() => {
+  //     resolve();
+  //   }, 2000);
+  // });
 
 
   // Encode Text Data
   const textDataEncode = new TextDataEncode(textData, password);
-  console.log("Text Data Encode: ", textDataEncode);  
   const cipherText = textDataEncode.encrypt();
   console.log("Cipher Text: ", cipherText);
+  let data = await ImageServices.embeddMessage(imageData.base64encode, cipherText);
+  console.log("Data: ", data);
 }
 
 const Encoder = ({ setActiveTab }) => {

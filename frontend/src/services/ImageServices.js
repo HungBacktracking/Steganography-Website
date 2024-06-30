@@ -1,12 +1,19 @@
-import http from "../http-common";
+import http from "./http_common";
 
-const embeddMessage = (base64Data, message) => {
+const embeddMessage = async (base64Data, message) => {
   // Dummy sample code
   let data = {
-    base64Data: base64Data,
+    image: base64Data,
     message: message
   };
-  return http.post("/embedd", data);
+  try{
+    let response = await http.post("/embedd", data);
+    return response.data;
+  }
+  catch(e){
+    console.log(e);
+    return null;
+  }
 }
 
 const ImageServices = {
