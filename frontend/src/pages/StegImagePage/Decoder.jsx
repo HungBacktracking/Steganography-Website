@@ -68,6 +68,10 @@ const Decoder = ({ setActiveTab }) => {
   }
 
   const handleDownloadMessage = (message) => {
+    if (!message) {
+      toast.error("No message to download.");
+      return;
+    }
     // Download the message as a text file
     const element = document.createElement("a");
     const file = new Blob([message], { type: 'text/plain' });
@@ -121,122 +125,125 @@ const Decoder = ({ setActiveTab }) => {
   
   
     return (
-        <div className={classes.left}>
-            {/* Image Container */}
-            { 
-              imageData.base64encode ? ( <img src={imageData.base64encode} alt="Uploaded" /> ) : (
-                <UploadComponent readDataUploaded={readImageData} fileInput={fileInput} />
-              )
-            }
-  
-            {/* Resolution */}
-            <TwoSideTextBox 
-              titleComponent={<div className="basis-1/3" >Resolution</div>}
-              content={imageData.resolution}
-            />
-  
-            {/* Format */}
-            <TwoSideTextBox
-              titleComponent={<div className="basis-1/3" >Format</div>}
-              content={imageData.format}
-            />
-  
-            {/* Size */}
-            <TwoSideTextBox
-              titleComponent={<div className="basis-1/3" >Size</div>}
-              content={imageData.size}
-            />
-            
-            <div className={classes.action}>
-              {/* Decode button */}
-              <div className={`${classes.button_action_1} ${classes.success_}`}
-                onClick={() => togglePopup(PASSWORD_POPUP)}
-              >
-                Decode
-              </div>
-              
-              {/* Delete button */}
-              <div className={`${classes.button_action_1} ${classes.destroy_}`} 
-                onClick={() => { setImageData(new ImageData({})); setMessage(""); }}
-              >
-                Delete
-              </div>
-            </div>
+      <div className={classes.left}>
+        {/* Image Container */}
+        { 
+          imageData.base64encode ? ( <img src={imageData.base64encode} alt="Uploaded" /> ) : (
+            <UploadComponent readDataUploaded={readImageData} fileInput={fileInput} />
+          )
+        }
+
+        {/* Resolution */}
+        <TwoSideTextBox 
+          titleComponent={<div className="basis-1/3" >Resolution</div>}
+          content={imageData.resolution}
+        />
+
+        {/* Format */}
+        <TwoSideTextBox
+          titleComponent={<div className="basis-1/3" >Format</div>}
+          content={imageData.format}
+        />
+
+        {/* Size */}
+        <TwoSideTextBox
+          titleComponent={<div className="basis-1/3" >Size</div>}
+          content={imageData.size}
+        />
+          
+        <div className={classes.action}>
+          {/* Decode button */}
+          <div className={`${classes.button_action_1} ${classes.success_}`}
+            onClick={() => togglePopup(PASSWORD_POPUP)}
+          >
+            Decode
+          </div>
+          
+          {/* Delete button */}
+          <div className={`${classes.button_action_1} ${classes.destroy_}`} 
+            onClick={() => { setImageData(new ImageData({})); setMessage(""); }}
+          >
+            Delete
+          </div>
         </div>
+      </div>
     )
   }
   
   const DecoderRightComponent = ({
     message
   }) => { 
+    const messageSizeBytes = message ? new Blob([message]).size.toString() + " B" : 0;
+    const wordCount = message ? message.split(/\s+/).length : 0;
     
     return (
-        <div className={classes.right}>
-            <div className={classes.header_notepad}>
-                <div className={classes.small_title}>Extracted text</div>
-                <div className={`${classes.action_list} ms-auto`}>
-                    <div className={classes.button_action_2} onClick={(e) => handleDownloadMessage(message)}>Save</div>
-                    <div className={classes.button_action_2}>Save as</div>
-                </div>
-            </div>
-            <div className={classes.notepad}>
-              {message}
-            </div>
-            <div className={classes.info_list + " mt-auto"} >
-                {/* Text size */}
-                <TwoSideTextBox 
-                 title = "Text size"
-                  content = "2.1Kb"
-                  className={"flex-[70%] p-[0.7vw]"}
-                />
-  
-                {/* Path */}
-                <TwoSideTextBox
-                  title = "Path"
-                  content = "/home/user/Downloads"
-                  className={"flex-[70%] p-[0.7vw]"}
-                />
-            </div>
+      <div className={classes.right}>
+        <div className={classes.header_notepad}>
+          <div className={classes.small_title}>Extracted text</div>
+          <div className={`${classes.action_list} ms-auto`}>
+              <div className={classes.button_action_2} onClick={() => handleDownloadMessage(message)}>Save</div>
+              <div className={classes.button_action_2}>Save as</div>
+          </div>
         </div>
+        <div className={classes.notepad}>
+          {message}
+        </div>
+
+        <div className={classes.info_list + " mt-auto"} >
+          {/* Text size */}
+          <TwoSideTextBox 
+            title = "Text size"
+            content={messageSizeBytes}
+            className={"flex-[70%] p-[0.7vw]"}
+          />
+
+          {/* Word count */}
+          <TwoSideTextBox
+            title = "Word count"
+            content = {wordCount}
+            className={"flex-[70%] p-[0.7vw]"}
+          />
+        </div>
+      </div>
     )
   }
   return (
-      <div className={classes.steg_container}>
-          <div className={classes.list_title}>
-            <div className={classes.title} onClick={() => setActiveTab('encode')}>Encode</div>
-            <div className={ `${classes.title_active} ${classes.title}`}>Decode</div>
-          </div>
-        
-          <div className={classes.steg_wrapper}>
-             <DecoderLeftComponent
-              imageData={imageData}
-              setImageData={setImageData} 
-              />
-              <DecoderRightComponent 
-                message={message}/>
-          </div>
+    <div className={classes.steg_container}>
+      <div className={classes.list_title}>
+        <div className={classes.title} onClick={() => setActiveTab('encode')}>Encode</div>
+        <div className={ `${classes.title_active} ${classes.title}`}>Decode</div>
+      </div>
+      
+      <div className={classes.steg_wrapper}>
+        <DecoderLeftComponent
+        imageData={imageData}
+        setImageData={setImageData} 
+        />
+        <DecoderRightComponent 
+          message={message}/>
+      </div>
 
-          <div>
-            {
-              isOpen(PASSWORD_POPUP) && (
-                <PasswordPopup
-                  onConfirm={(password) => {
-                    handleDecode(imageData, password);
-                  }
-                  }
-                  onCancel={() => {
-                    toast.warning("Encode canceled");
-                  }}
-                  onClose={() => togglePopup(PASSWORD_POPUP)}
-                />
-              )
-            }
+      <div>
+        {
+          isOpen(PASSWORD_POPUP) && (
+            <PasswordPopup
+              onConfirm={(password) => {
+                handleDecode(imageData, password);
+              }
+              }
+              onCancel={() => {
+                toast.warning("Encode canceled");
+              }}
+              onClose={() => togglePopup(PASSWORD_POPUP)}
+            />
+          )
+        }
 
-            {
-              isDecoding && <Spinner />
-            }
-          </div>
-      </div> 
+        {
+          isDecoding && <Spinner />
+        }
+      </div>
+    </div> 
   )
 }
 

@@ -17,10 +17,10 @@ import { ImageServices } from '../../services';
 const PASSWORD_POPUP = 'passwordPopup';
 
 const encode = async (imageData, textData, password) => {
-  console.log("Handle Encode");
-  console.log("Image Data: ", imageData);
-  console.log("Text Data: ", textData);
-  console.log("Password: ", password);
+  // console.log("Handle Encode");
+  // console.log("Image Data: ", imageData);
+  // console.log("Text Data: ", textData);
+  // console.log("Password: ", password);
 
   // Check Condition
   if (!textData) {
@@ -43,9 +43,9 @@ const encode = async (imageData, textData, password) => {
   // Encode Text Data
   const textDataEncode = new TextDataEncode(textData, password);
   const cipherText = textDataEncode.encrypt();
-  console.log("Cipher Text: ", cipherText);
+  // console.log("Cipher Text: ", cipherText);
   let data = await ImageServices.embeddMessage(imageData.base64encode, cipherText);
-  console.log("Data: ", data);
+  // console.log("Data: ", data);
   return data;
 }
 
@@ -70,7 +70,7 @@ const Encoder = ({ setActiveTab }) => {
   const [message, setMessage] = useState({});
   const textareaRef = useRef(null);
   const handleChooseFile = useCallback((fileObject) => {
-    console.log("Handle Choose File: ", fileObject);
+    // console.log("Handle Choose File: ", fileObject);
     setMessage(fileObject);
     textareaRef.current.value = fileObject.content;
   }, []);
@@ -94,7 +94,7 @@ const Encoder = ({ setActiveTab }) => {
       downloadLink.download = 'encoded_image.png';
       downloadLink.click();
     } catch (err) {
-      console.log("Error: ", err);
+      // console.log("Error: ", err);
       toast.error("Failed to encode. Please try again.");
     } finally {
       setIsEncoding(false);
@@ -179,7 +179,7 @@ const Encoder = ({ setActiveTab }) => {
           {/* Delete button */}
           <div 
             className={`${classes.button_action_1} ${classes.destroy_}`} 
-            onClick={() => setImageData(new ImageData({}))}
+            onClick={() => {setImageData(new ImageData({})); setMessage({}); textareaRef.current.value = ""}}
           >
             Delete
           </div>
@@ -198,7 +198,7 @@ const Encoder = ({ setActiveTab }) => {
       if (!e.target.files || e.target.files.length === 0) return;
 
       const file = e.target.files[0];
-      console.log("File Choose: ", file);
+      // console.log("File Choose: ", file);
 
       // Check Condition
       const checkError = EncodeImageFile.checkFileError(file);
@@ -235,9 +235,11 @@ const Encoder = ({ setActiveTab }) => {
               onChange={handleFileChange}
               multiple={false}
             />
-            <div className={classes.button_action_2}>Save</div>
-            <div className={classes.button_action_2}>Save as</div>
-            <div className={classes.button_action_2}>New</div>
+            <div className={classes.button_action_2} 
+              onClick={() => {setMessage({}); textareaRef.current.value = ""}}
+            >
+              New
+            </div>
           </div>
         </div>
         <textarea
@@ -250,10 +252,10 @@ const Encoder = ({ setActiveTab }) => {
         <div className={classes.info_list + " mt-auto"}>
           {/* Capacity */}
           <TwoSideTextBox className={"flex-[70%] p-[0.7vw]"} title="Capacity"
-            content={message.size ? `${message.size}B/ 10Kb` : `2.1Kb/ 10Kb`}
+            content={message.size ? `${message.size}B` : `N/A`}
           />
-          {/* Path */}
-          <TwoSideTextBox className={"flex-[70%] p-[0.7vw]"} title="Name" content={message.name || `D:\\path\\sub_path`} />
+          {/* File name */}
+          <TwoSideTextBox className={"flex-[70%] p-[0.7vw]"} title="File name" content={message.name || `N/A`} />
         </div>
       </div>
     )
@@ -344,7 +346,7 @@ class EncodeImageFile {
       // Await to read the file and get the content
       const content = await new Promise((resolve, reject) => {
         reader.onload = (e) => {
-          console.log("File content: ", e.target.result);
+          // console.log("File content: ", e.target.result);
           resolve(e.target.result);
         }
         reader.onerror = (e) => {
@@ -359,7 +361,7 @@ class EncodeImageFile {
         error: null,
       }
     } catch (err) {
-      console.log("Error: ", err);
+      // console.log("Error: ", err);
       return {
         data: null,
         error: "Failed to read the file. Please try again.",
