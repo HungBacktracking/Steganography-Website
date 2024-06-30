@@ -1,17 +1,6 @@
-import classes from './StegImagePage.module.css';
+import classes from './StegAudioPage.module.css';
 import { TwoSideTextBox } from '../../components/Box';
 import { useRef, useState } from 'react';
-import { UploadImage } from '../../assets';
-
-class ImageData {
-  constructor(image) {
-    this.name         = image.name || "N/A";
-    this.base64encode = image.base64encode || "";
-    this.resolution   = image.resolution || "N/A";
-    this.format       = image.format || "N/A";
-    this.size         = image.size || "N/A";
-  }
-};
 
 const Decoder = ({ setActiveTab }) => {
   return (
@@ -31,83 +20,65 @@ const Decoder = ({ setActiveTab }) => {
 
 const DecoderLeftComponent = ({}) => {
   const fileInput = useRef(null);
-  const [imageData, setImageData] = useState(new ImageData({}));
+  const [audio, setAudio] = useState(null);
 
 
-  const handleImageContainerClick = () => {
+  const handleAudioContainerClick = () => {
     fileInput.current.click();
-  }
+  };
 
   const handleFileSelection = (e) => {
     const file = e.target.files[0];
-    
     if (file) {
       const reader = new FileReader();
-      reader.onload = (e) => {
-        const image = new Image();
-        image.onload = () => {
-          const imageData = new ImageData({
-            name: file.name,
-            base64encode: e.target.result,
-            resolution: `${image.width} x ${image.height}`,
-            format: file.type,
-            size: file.size
-          });
-          setImageData(imageData);
-        };
-
-        img.src = e.target.result;
-      };
-
+      reader.onload = () => {
+        setAudio(reader.result);
+      }
       reader.readAsDataURL(file);
-      console.log(file);
-      // do something with the file
-
-    }
-    else {
-      toast.error("Failed to upload file. Please try again.");
-      return;
     }
   };
 
-
   return (
       <div className={classes.left}>
-          <div className={classes.image_container} onClick={handleImageContainerClick}>
-              <div className={classes.uploadPrompt}>
-                { imageData.base64encode 
-                  ? (<img src={imageData.base64encode} alt="Uploaded" />)
-                  : (<>
-                    <img src={UploadImage} className='' alt="Upload" />
-                    <p className="">Click to upload an image</p>
-                  </>) }
-              </div>
-            <input
-              type="file"
-              ref={fileInput}
-              onChange={handleFileSelection}
-              style={{ display: 'none' }}
-              accept="image/*" // Accept only images
-            />
-          </div>
+        <div className={classes.audio_container} onClick={handleAudioContainerClick}>
+          {audio ? (
+            <audio controls src={audio} style={{ maxWidth: '100%', maxHeight: '100%' }} />
+          ) : (
+            <div className={classes.uploadPrompt}>Click to upload an audio file</div>
+          )}
+          <input
+            type="file"
+            accept=".wav" // Accept only .wav files
+            style={{ display: 'none' }} // Hide the file input
+            onChange={handleFileSelection}
+            ref={fileInput}
+          />
+        </div>
 
-          {/* Resolution */}
-          <TwoSideTextBox 
+          {/* <div className={classes.info}>Resolution</div> */}
+          {/* <TwoSideTextBox 
             titleComponent={<div className="basis-1/3" >Resolution</div>}
-            content={imageData.resolution}
-          />
+            content={imageResolution}
+          /> */}
 
-          {/* Format */}
-          <TwoSideTextBox
+          {/* <div className={classes.info}>Mode</div> */}
+          {/* <TwoSideTextBox
+            titleComponent={<div className="basis-1/3" >Mode</div>}
+            content={"...."}
+          /> */}
+
+
+          {/* <div className={classes.info}>Format</div> */}
+          {/* <TwoSideTextBox
             titleComponent={<div className="basis-1/3" >Format</div>}
-            content={imageData.format}
-          />
+            content={imageFormat}
+          /> */}
 
-          {/* Size */}
-          <TwoSideTextBox
+          {/* <div className={classes.info}>Size</div> */}
+          {/* <TwoSideTextBox
             titleComponent={<div className="basis-1/3" >Size</div>}
-            content={imageData.size}
-          />
+            content={imageSize}
+          /> */}
           <div className={classes.action}>
               <div className={`${classes.button_action_1} ${classes.success_}`}>Decode</div>
               <div className={`${classes.button_action_1} ${classes.destroy_}`}>Delete</div>
