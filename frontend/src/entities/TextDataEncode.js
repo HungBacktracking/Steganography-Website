@@ -1,14 +1,11 @@
 import { DataEncode } from ".";
+import { textToBinary } from '../utils/endec';
 
 class TextDataEncode extends DataEncode {
-  constructor(text) {
-    super(text);
-    this.encodeToBase64();
-  }
-
-  encodeToBase64() {
-    console.log("Encode at TextData");
-    this.base64encode = "base64encode";
+  constructor(text, password) {
+    // text     => binary (UTF-8) => binaryMessage
+    // password => binary (UTF-8) => key
+    super(textToBinary(text), textToBinary(password)); 
   }
 }
 

@@ -2,7 +2,7 @@ import { useRef, useState, useCallback } from 'react';
 import { toast } from 'react-toastify';
 
 // Entity Object
-import { TextData } from '../../entities';
+import { TextDataEncode } from '../../entities';
 import ImageData from './ImageData';
 
 // Asset
@@ -14,6 +14,37 @@ import { TwoSideTextBox } from '../../components/Box';
 import { PasswordPopup, Spinner } from '../../components/Popup';
 
 const PASSWORD_POPUP = 'passwordPopup';
+
+const encode = async (imageData, textData, password) => {
+  console.log("Handle Encode");
+  console.log("Image Data: ", imageData);
+  console.log("Text Data: ", textData);
+  console.log("Password: ", password);
+
+  // Check Condition
+  if (!textData) {
+    toast.error("No data to encode. Please try again.");
+    return;
+  }
+  if (!imageData.base64encode) {
+    toast.error("No image to encode. Please try again.");
+    return;
+  }
+
+  // Fake Encode
+  await new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve();
+    }, 2000);
+  });
+
+
+  // Encode Text Data
+  const textDataEncode = new TextDataEncode(textData, password);
+  console.log("Text Data Encode: ", textDataEncode);  
+  const cipherText = textDataEncode.encrypt();
+  console.log("Cipher Text: ", cipherText);
+}
 
 const Encoder = ({ setActiveTab }) => {
   const [showPopup, setShowPopup] = useState(false);
@@ -46,35 +77,16 @@ const Encoder = ({ setActiveTab }) => {
   const [isEncoding, setIsEncoding] = useState(false);
 
   const handleEncode = async (imageData, textData, password) => {
-    console.log("Handle Encode");
-    console.log("Image Data: ", imageData);
-    console.log("Text Data: ", textData);
-    console.log("Password: ", password);
-
-    // Check Condition
-    if (!textData) {
-      toast.error("No data to encode. Please try again.");
-      return;
-    }
-    if (!password) {
-      toast.error("Please enter a password to encode.");
-      return;
-    }
-    if (!imageData.base64encode) {
-      toast.error("No image to encode. Please try again.");
-      return;
-    }
-
     setIsEncoding(true);
-    await new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve();
-      }, 5000);
-    });
-    setIsEncoding(false);
+    try {
+      await encode(imageData, textData, password);
+    } catch (err) {
+      console.log("Error: ", err);
+      toast.error("Failed to encode. Please try again.");
+    } finally {
+      setIsEncoding(false);
+    }
   }
-
-
 
   /* #region Child Component */
   const EncoderLeftComponent = ({
