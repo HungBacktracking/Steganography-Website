@@ -12,27 +12,31 @@ def get_encoded_image(request):
         image_base64 = request['image']
         message = request['message']
 
-        # Decode the base64-encoded image
-        print("Decode the base64-encoded image")
-        image_data = base64.b64decode(image_base64)
-        image_file = io.BytesIO(image_data)
+        try:
+            # Decode the base64-encoded image
+            print("Decode the base64-encoded image")
+            image_data = base64.b64decode(image_base64)
+            image_file = io.BytesIO(image_data)
 
-        print("Call encode")
-        stego = ImageSteganography()
-        modified_image = stego.hide_data(image_file, message)
+            print("Call encode")
+            stego = ImageSteganography()
+            modified_image = stego.hide_data(image_file, message)
 
-        # Save the image to a BytesIO object
-        print("Save the image to a BytesIO object")
-        image_io = io.BytesIO()
-        modified_image.save(image_io, format='PNG')
-        image_io.seek(0)
+            # Save the image to a BytesIO object
+            print("Save the image to a BytesIO object")
+            image_io = io.BytesIO()
+            modified_image.save(image_io, format='PNG')
+            image_io.seek(0)
 
-        # Encode the modified image back to base64
-        print("Encode result image")
-        encoded_image = base64.b64encode(image_io.getvalue()).decode()
+            # Encode the modified image back to base64
+            print("Encode result image")
+            encoded_image = base64.b64encode(image_io.getvalue()).decode()
 
-        print("Return response")
-        return jsonify({'image': encoded_image})
+            print("Return response")
+            return jsonify({'image': encoded_image})
+        except Exception as e:
+            print("ERROR 500")
+        return jsonify({'error': str(e)}), 500
     except Exception as e:
         print("ERROR 400")
         return jsonify({'error': str(e)}), 400
