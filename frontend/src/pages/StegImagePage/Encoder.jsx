@@ -11,8 +11,7 @@ import { UploadImage } from '../../assets';
 // Component
 import classes from './StegImagePage.module.css';
 import { TwoSideTextBox } from '../../components/Box';
-import { PasswordPopup } from '../../components/Popup';
-
+import { PasswordPopup, Spinner } from '../../components/Popup';
 
 const PASSWORD_POPUP = 'passwordPopup';
 
@@ -44,7 +43,7 @@ const Encoder = ({ setActiveTab }) => {
   const [imageData, setImageData] = useState(new ImageData({}));
   /* #endregion */
 
-  const [isEncode, setIsEncode] = useState(true);
+  const [isEncoding, setIsEncoding] = useState(false);
 
   const handleEncode = async (imageData, textData, password) => {
     console.log("Handle Encode");
@@ -61,14 +60,18 @@ const Encoder = ({ setActiveTab }) => {
       toast.error("Please enter a password to encode.");
       return;
     }
+    if (!imageData.base64encode) {
+      toast.error("No image to encode. Please try again.");
+      return;
+    }
 
-    setIsEncode(true);
+    setIsEncoding(true);
     await new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve();
-      }, 1000);
+      }, 5000);
     });
-    setIsEncode(false);
+    setIsEncoding(false);
   }
 
 
@@ -277,6 +280,10 @@ const Encoder = ({ setActiveTab }) => {
               onClose={() => togglePopup(PASSWORD_POPUP)}
             />
           )
+        }
+
+        {
+          isEncoding && <Spinner />
         }
       </div>
     </div>
