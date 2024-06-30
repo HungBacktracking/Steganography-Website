@@ -3,6 +3,16 @@ import { TwoSideTextBox } from '../../components/Box';
 import { useRef, useState } from 'react';
 import { UploadImage } from '../../assets';
 
+class ImageData {
+  constructor(image) {
+    this.name         = image.name || "N/A";
+    this.base64encode = image.base64encode || "";
+    this.resolution   = image.resolution || "N/A";
+    this.format       = image.format || "N/A";
+    this.size         = image.size || "N/A";
+  }
+};
+
 const Decoder = ({ setActiveTab }) => {
   return (
       <div className={classes.steg_container}>
@@ -21,10 +31,8 @@ const Decoder = ({ setActiveTab }) => {
 
 const DecoderLeftComponent = ({}) => {
   const fileInput = useRef(null);
-  const [image, setImage] = useState(null);
-  const [imageResolution, setImageResolution] = useState("N/A");
-  const [imageFormat, setImageFormat] = useState("N/A");
-  const [imageSize, setImageSize] = useState("N/A");
+  const [imageData, setImageData] = useState(new ImageData({}));
+
 
   const handleImageContainerClick = () => {
     fileInput.current.click();
@@ -34,20 +42,20 @@ const DecoderLeftComponent = ({}) => {
     const file = e.target.files[0];
     
     if (file) {
-      // Set the image to be displayed
-      setImageFormat(file.type.split('/')[1].toUpperCase());
-      setImageSize((file.size / 1024 / 1024).toFixed(2) + 'Mb'); // Convert bytes to megabytes
-
       const reader = new FileReader();
       reader.onload = (e) => {
-        setImage(e.target.result);
-        // alert("File uploaded successfully!");
-
-        // Get image resolution
-        const img = new Image();
-        img.onload = () => {
-          setImageResolution(`${img.width}x${img.height}`);
+        const image = new Image();
+        image.onload = () => {
+          const imageData = new ImageData({
+            name: file.name,
+            base64encode: e.target.result,
+            resolution: `${image.width} x ${image.height}`,
+            format: file.type,
+            size: file.size
+          });
+          setImageData(imageData);
         };
+
         img.src = e.target.result;
       };
 
@@ -57,8 +65,8 @@ const DecoderLeftComponent = ({}) => {
 
     }
     else {
-      alert("Failed to upload file. Please try again.");
-      console.log("No file selected");
+      toast.error("Failed to upload file. Please try again.");
+      return;
     }
   };
 
@@ -67,8 +75,8 @@ const DecoderLeftComponent = ({}) => {
       <div className={classes.left}>
           <div className={classes.image_container} onClick={handleImageContainerClick}>
               <div className={classes.uploadPrompt}>
-                { image 
-                  ? (<img src={image} alt="Uploaded" />)
+                { imageData.base64encode 
+                  ? (<img src={imageData.base64encode} alt="Uploaded" />)
                   : (<>
                     <img src={UploadImage} className='' alt="Upload" />
                     <p className="">Click to upload an image</p>
@@ -83,29 +91,22 @@ const DecoderLeftComponent = ({}) => {
             />
           </div>
 
-          {/* <div className={classes.info}>Resolution</div> */}
+          {/* Resolution */}
           <TwoSideTextBox 
             titleComponent={<div className="basis-1/3" >Resolution</div>}
-            content={imageResolution}
+            content={imageData.resolution}
           />
 
-          {/* <div className={classes.info}>Mode</div> */}
-          {/* <TwoSideTextBox
-            titleComponent={<div className="basis-1/3" >Mode</div>}
-            content={"...."}
-          /> */}
-
-
-          {/* <div className={classes.info}>Format</div> */}
+          {/* Format */}
           <TwoSideTextBox
             titleComponent={<div className="basis-1/3" >Format</div>}
-            content={imageFormat}
+            content={imageData.format}
           />
 
-          {/* <div className={classes.info}>Size</div> */}
+          {/* Size */}
           <TwoSideTextBox
             titleComponent={<div className="basis-1/3" >Size</div>}
-            content={imageSize}
+            content={imageData.size}
           />
           <div className={classes.action}>
               <div className={`${classes.button_action_1} ${classes.success_}`}>Decode</div>

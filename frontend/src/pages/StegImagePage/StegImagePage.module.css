@@ -117,7 +117,7 @@
     border-color: #b3000c; /* Darker blue on hover */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow for depth */
     background-color: rgba(255, 255, 255, 0.8); /* Slightly change background color */
-    border-width: 3px; /* Make the border slightly thicker for emphasis */
+    /* border-width: 1px; Make the border slightly thicker for emphasis */
     cursor: pointer; /* Change cursor to pointer on hover */
 }
 

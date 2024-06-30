@@ -1,2 +1,2 @@
-export { default as Data } from './Data';
-export { default as TextData } from './TextData';
+export { default as DataEncode } from './DataEncode';
+export { default as TextDataEncode } from './TextDataEncode';

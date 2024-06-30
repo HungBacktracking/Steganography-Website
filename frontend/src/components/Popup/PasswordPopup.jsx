@@ -14,7 +14,6 @@ function PasswordPopup({
 
   const handleSubmit = () => {
     let password = passwordRef.current.value;
-    console.log('Mật khẩu:', password);
     onConfirm(password);
     onClose();
   };
@@ -27,6 +26,10 @@ function PasswordPopup({
   const handleKeyDown = (event) => {
     if (event.key === 'Escape') {
       onClose();
+    }
+
+    if (event.key === 'Enter') {
+      handleSubmit();
     }
   };
 
@@ -61,6 +64,7 @@ function PasswordPopup({
                 ref={passwordRef}
                 type="password"
                 placeholder="Password to Encrypt"
+                autoFocus={true}
                 />
 
               <div className='ms-auto flex justify-end'>
