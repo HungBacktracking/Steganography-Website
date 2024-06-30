@@ -12,6 +12,7 @@ import { UploadImage } from '../../assets';
 import classes from './StegImagePage.module.css';
 import { TwoSideTextBox } from '../../components/Box';
 import { PasswordPopup, Spinner } from '../../components/Popup';
+import { UploadComponent } from '../../components/UploadComponent';
 
 // Service
 import { ImageServices } from '../../services';
@@ -150,23 +151,12 @@ const Encoder = ({ setActiveTab }) => {
 
     return (
       <div className={classes.left}>
-        <div className={classes.image_container} onClick={handleImageContainerClick}>
-          <div className={classes.uploadPrompt}>
-            {imageData.base64encode
-              ? (<img src={imageData.base64encode} className='min-h-[100%]' alt="Uploaded" />)
-              : (<>
-                <img src={UploadImage} className='pt-4 min-h-[60%]' alt="Upload" />
-                <p className="p-4">Click to upload an image</p>
-              </>)}
-          </div>
-          <input
-            type="file"
-            ref={fileInput}
-            onChange={handleFileSelection}
-            style={{ display: 'none' }}
-            accept="image/*" // Accept only images
-          />
-        </div>
+        {/* Image Container */}
+        { 
+          imageData.base64encode ? ( <img src={imageData.base64encode} alt="Uploaded" /> ) : (
+            <UploadComponent handleFileSelection={handleFileSelection} fileInput={fileInput} />
+          )
+        }
 
         {/* Resolution */}
         <TwoSideTextBox
