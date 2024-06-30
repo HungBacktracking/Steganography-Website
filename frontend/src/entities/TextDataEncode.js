@@ -1,6 +1,6 @@
-import { Data } from ".";
+import { DataEncode } from ".";
 
-class TextData extends Data {
+class TextDataEncode extends DataEncode {
   constructor(text) {
     super(text);
     this.encodeToBase64();
@@ -12,4 +12,4 @@ class TextData extends Data {
   }
 }
 
-export default TextData;
+export default TextDataEncode;

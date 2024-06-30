@@ -10,9 +10,10 @@
  * - Library: CryptoJS
 */
 
-class Data {
-  constructor(data) {
+class DataEncode {
+  constructor(data, password) {
     this.data = data;
+    this.password = password;
     this.base64encode = null;
   }
 
@@ -27,4 +28,4 @@ class Data {
   }
 }
 
-export default Data;
+export default DataEncode;
