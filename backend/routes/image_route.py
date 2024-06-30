@@ -1,16 +1,14 @@
 from flask import Blueprint, request
-from controllers.image_controller import get_image_encoded, get_image_decoded
+from controllers.image_controller import get_encoded_image, get_decoded_image
 
 image = Blueprint("image", __name__)
 
-
 @image.route("/image/encoded", methods=["POST"])
-def get_image_encoded():
-    return get_image_encoded(request.json) # Example of how to use the audio function from the controller
+def encode_image():
+    # print("request in Route")
+    # print(request)
+    return get_encoded_image(request.json)
 
 @image.route("/image/decoded", methods=["POST"])
-def get_audio_decoded():
-    return get_audio_decoded(request.json) # Example of how to use the audio function from the controller
-
-
-
+def decode_image():
+    return get_decoded_image(request.json)
