@@ -63,7 +63,7 @@ function PasswordPopup({
               <input
                 ref={passwordRef}
                 type="password"
-                placeholder="Password to Encrypt"
+                placeholder="Password to Encrypt (Optional)"
                 autoFocus={true}
                 />
 

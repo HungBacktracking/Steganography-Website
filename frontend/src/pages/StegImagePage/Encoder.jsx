@@ -142,10 +142,10 @@ const Encoder = ({ setActiveTab }) => {
         <div className={classes.image_container} onClick={handleImageContainerClick}>
           <div className={classes.uploadPrompt}>
             {imageData.base64encode
-              ? (<img src={imageData.base64encode} alt="Uploaded" />)
+              ? (<img src={imageData.base64encode} className='min-h-[100%]' alt="Uploaded" />)
               : (<>
-                <img src={UploadImage} className='' alt="Upload" />
-                <p className="">Click to upload an image</p>
+                <img src={UploadImage} className='pt-4 min-h-[60%]' alt="Upload" />
+                <p className="p-4">Click to upload an image</p>
               </>)}
           </div>
           <input
