@@ -7,7 +7,7 @@ const embeddMessage = async (base64Data, message) => {
     message: message
   };
   try{
-    let response = await http.post("/embedd", data);
+    let response = await http.post("/image/encoded", data);
     return response.data;
   }
   catch(e){
