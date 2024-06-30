@@ -129,7 +129,8 @@ const EncoderLeftComponent = ({
 
     }
     else {
-      alert("Failed to upload file. Please try again.");
+      toast.error("Failed to upload file. Please try again.");
+      return;
     }
   };
 
