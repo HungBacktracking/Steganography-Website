@@ -262,3 +262,7 @@
     background-color: rgba(0, 0, 0, 0.5); /* Increased contrast for hover/active state */
     transform: translateY(-2px); /* Slight lift effect on hover */
 }
+
+.image {
+    border-radius: 5px;
+}
