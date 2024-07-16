@@ -6,8 +6,9 @@ class AudioSteganography:
     def __init__(self):
         self.num_lsb = 8
 
-    def prepare(self, sound_path):
-        self.sound = wave.open(sound_path, "r")
+    def prepare(self, sound_file):
+        sound_file.seek(0)
+        self.sound = wave.open(sound_file, "r")
         self.params = self.sound.getparams()
         self.num_channels = self.sound.getnchannels()
         self.sample_width = self.sound.getsampwidth()
@@ -25,8 +26,8 @@ class AudioSteganography:
         else:
             raise ValueError("File has an unsupported bit-depth")
 
-    def hide_data(self, sound_path, message):
-        self.prepare(sound_path)
+    def hide_data(self, sound_file, message):
+        self.prepare(sound_file)
         max_bytes_to_hide = (self.n_samples * self.num_lsb) // 8
         message += '\0'  # Add a null terminator to the message
         if len(message) > max_bytes_to_hide:
@@ -87,8 +88,8 @@ class AudioSteganography:
 
         return output_sound
     
-    def recover_data(self, sound_path):
-        self.prepare(sound_path)
+    def recover_data(self, sound_file):
+        self.prepare(sound_file)
         raw_data = list(struct.unpack(self.fmt, self.sound.readframes(self.n_frames)))
         mask = (1 << self.num_lsb) - 1
         data = bytearray()
@@ -112,4 +113,3 @@ class AudioSteganography:
                 if current_data == 0:  # Check for null terminator
                     return data.decode('utf-8')
                 data += struct.pack('1B', current_data)
-

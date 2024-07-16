@@ -15,37 +15,44 @@ def _detect_prefix(data):
 
     return prefix, new_data
 
-def get_audio_encoded(request):
+def get_audio_encoded():
     try:
         print("Get data from request")
-        audio_base64 = request['audio']
-        message = request['message']
+        audio_base64 = request.json['audio']
+        message = request.json['message']
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+    print(message)
     
     prefix, new_audio_base64 = _detect_prefix(audio_base64)
 
     try:
+        print("Decode the base64-encoded audio")
         audio_data = base64.b64decode(new_audio_base64)
         audio_file = io.BytesIO(audio_data)
 
+        print("Call encode")
         stego = AudioSteganography()
         modified_audio = stego.hide_data(audio_file, message)
 
+        print("Save the audio to a BytesIO object")
         audio_io = io.BytesIO()
         modified_audio.save(audio_io, format='wav')
         audio_io.seek(0)
 
+        print("Encode result audio")
         encoded_audio = prefix + base64.b64encode(audio_io.getvalue()).decode()
 
+        print("Return response")
         return jsonify({'audio': encoded_audio})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
-def get_audio_decoded(request):
+def get_audio_decoded():
     try:
-        audio_base64 = request['audio']
+        audio_base64 = request.json['audio']
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
