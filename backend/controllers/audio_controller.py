@@ -37,13 +37,8 @@ def get_audio_encoded():
         stego = AudioSteganography()
         modified_audio = stego.hide_data(audio_file, message)
 
-        print("Save the audio to a BytesIO object")
-        audio_io = io.BytesIO()
-        modified_audio.save(audio_io, format='wav')
-        audio_io.seek(0)
-
         print("Encode result audio")
-        encoded_audio = prefix + base64.b64encode(audio_io.getvalue()).decode()
+        encoded_audio = prefix + base64.b64encode(modified_audio.getvalue()).decode()
 
         print("Return response")
         return jsonify({'audio': encoded_audio})
