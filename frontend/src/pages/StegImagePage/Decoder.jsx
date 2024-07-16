@@ -182,7 +182,7 @@ const Decoder = ({ setActiveTab }) => {
           <div className={classes.small_title}>Extracted text</div>
           <div className={`${classes.action_list} ms-auto`}>
               <div className={classes.button_action_2} onClick={() => handleDownloadMessage(message)}>Save</div>
-              <div className={classes.button_action_2}>Save as</div>
+              <div className={classes.button_action_2} onClick={() => handleDownloadMessage(message)}>Save as</div>
           </div>
         </div>
         <div className={classes.notepad}>
