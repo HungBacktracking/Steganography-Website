@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const http =  axios.create({
-    baseURL: "http://localhost:5000/",
+    baseURL: "https://steganography-website-backend.onrender.com/",
     headers: {
         "Content-type": "application/json"
     }
