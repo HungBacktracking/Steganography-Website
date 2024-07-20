@@ -22,3 +22,5 @@ flask_jwt_extended==4.6.0
 flask-cors
 python-dotenv
 pytest
+Pillow
+
