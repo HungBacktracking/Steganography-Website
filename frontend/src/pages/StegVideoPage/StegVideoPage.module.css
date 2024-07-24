@@ -1,0 +1,268 @@
+.container_page {
+    padding: 5vh 5vw;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 0;
+    z-index: 1;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(15 23 42 / 0.04)'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e");
+}
+
+.steg_container {
+    margin-top: 0;
+    display: flex;
+    /* flex-wrap: wrap; */
+    flex: 1;
+    flex-direction: column;
+    gap: 1vh;
+    padding: 3vh;
+    background-color: white; /* Chuyển sang màu nền tối nhẹ */
+    color: black; /* Chuyển văn bản sang màu đen */
+    border-radius: 5px;
+    z-index: 10;
+    max-height: 100%;
+
+    --tw-shadow: 0 20px 25px -5px #0000001a, 0 8px 10px -6px #0000001a;
+    --tw-shadow-colored: 0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.steg_wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 2vw;
+    /* flex: 1; */
+}
+
+.left {
+    flex-basis: 40%;
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+    height: 100%;
+}
+
+.list_title {
+    display: flex;
+    flex-direction: row;
+    gap: 1vw;
+    padding-bottom: 3vh;
+    background-color: rgb(248 250 252);
+    color: rgb(100 116 139);
+}
+
+.title_active {
+    color: white;
+    background-color: rgb(14 165 233);
+}
+
+.title {
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.5rem 1.25rem;
+    border-radius: .375rem;
+    cursor: pointer;
+}
+
+.image_container {
+    /* height: 35vh; */
+    display: flex;
+    flex-grow: 0;
+    border: 2px dashed rgba(0, 0, 0, 0.5); /* Chuyển sang màu viền đen */
+    border-radius: 5px;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    height: 240px;
+    flex-wrap: wrap;
+    /* background-image: url('../../assets/upload_image.png');
+    background-repeat: no-repeat;
+    background-size: 30%;
+    background-position: center 7vh; */
+    /* position: relative; */
+}
+
+.uploadPrompt {
+    /* position: absolute; */
+    /* top: calc(7vh + 50%);
+    left: 50%; */
+    /* transform: translateX(-50%); */
+    font-size: 1rem;
+    color: rgba(0, 0, 0, 0.5);
+    /* padding: 1vw; */
+    
+    max-width: 100%;
+    max-height: 100%;
+
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.uploadPrompt img{
+    max-height: 100%;
+    /* max-width: 100%; */
+    /* width: 100%; */
+    object-fit: cover;
+    /* padding-bottom: 1rem; */
+}
+
+.uploadPrompt p {
+    font-size: 1rem;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.7);
+    /* padding-top: 1rem; */
+}
+
+.image_container:hover {
+    border-color: #b3000c; /* Darker blue on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow for depth */
+    background-color: rgba(255, 255, 255, 0.8); /* Slightly change background color */
+    /* border-width: 1px; Make the border slightly thicker for emphasis */
+    cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+.info {
+    font-size: 1.3vw;
+    font-weight: 400;
+    padding: 0.5vw 1.5vw;
+    border-radius: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.5); /* Chuyển sang màu viền đen nhẹ */
+}
+
+.action {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: auto;
+}
+
+.button_action_1 {
+    padding: 1vw 2vw;
+    border-radius: 5px;
+    cursor: pointer;
+    border: solid 2px;
+    flex-basis: 48%;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.success_ {
+    border: #5a9f68 solid 2px;
+}
+
+.success_:hover {
+    background-color: rgba(90, 159, 104, 0.5);
+}
+
+.destroy_ {
+    border: #c24a4a solid 2px;
+}
+
+.destroy_:hover {
+    background-color: rgba(194, 74, 74, 0.5);
+}
+
+.right {
+    flex-basis: 60%;
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+    /* height: 100%; */
+}
+
+.small_title {
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.header_notepad {
+    display: flex;
+    flex-direction: row;
+}
+
+.action_list {
+    display: flex;
+    flex-direction: row;
+    gap: 1vw;
+}
+
+.button_action_2 {
+    /* align-items: center;
+    text-align: center; */
+    align-self: center;
+    padding: 1vh 2vw;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    background-color: rgb(239 246 255);
+    color: rgb(37 99 235);
+    font-size: 1.3vw;
+    font-weight: 500;
+}
+
+.button_action_2:hover {
+    background-color: rgb(219 234 254);
+    color: rgb(29 78 216);
+}
+
+.notepad {
+    /* height: 60vh; */
+    flex: 1;
+    padding: 1vw 1vw;
+    border-radius: 10px;
+    border: 2px solid rgba(0, 0, 0, 0.3); /* Chuyển sang màu viền đen */
+    font-size: 1rem;
+}
+
+.info_list {
+    display: flex;
+    flex-direction: row;
+    gap: 1vw;
+}
+
+.info_item_capacity {
+    flex-basis: 30%;
+    padding: 0.7vw;
+    border-radius: 5px;
+    border: 1px solid rgba(0, 0, 0, 1); /* Chuyển sang màu viền đen nhẹ */
+}
+
+.info_item_path {
+    flex-basis: 70%;
+    padding: 0.7vw;
+    border-radius: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.5); /* Chuyển sang màu viền đen nhẹ */
+}
+
+.tab_container {
+    margin-bottom: 0; /* Remove any bottom margin */
+    display: flex;
+    justify-content: flex-end; /* Aligns items to the right */
+}
+
+.tab {
+    padding: 10px 20px; /* Adjusted for better spacing */
+    border: none;
+    background-color: rgba(0, 0, 0, 0.1); /* Chuyển sang màu nền đen nhẹ */
+    color: black; /* Chuyển văn bản sang màu đen */
+    font-size: 16px; /* Adjusted for better readability */
+    cursor: pointer;
+    border-radius: 5px;
+    text-shadow: 0px 1px 3px rgba(255, 255, 255, 0.3); /* Chuyển bóng văn bản sang màu trắng nhẹ */
+    transition: background-color 0.3s, transform 0.2s; /* Smooth transition for hover and click */
+}
+
+.tab:hover, .tab.active {
+    background-color: rgba(0, 0, 0, 0.5); /* Increased contrast for hover/active state */
+    transform: translateY(-2px); /* Slight lift effect on hover */
+}
+
+.video {
+    border-radius: 5px;
+}
