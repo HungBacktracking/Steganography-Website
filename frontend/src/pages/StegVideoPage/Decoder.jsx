@@ -88,15 +88,22 @@ const Decoder = ({ setActiveTab }) => {
   }) => {
     const fileInput = useRef(null);
   
-    const handleVideoContainerClick = () => {
-      fileInput.current.click();
-    }
-  
     const readVideoData = (e) => {
       const file = e.target.files[0];
       
       if (file) {
-        
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+          const base64encode = e.target.result;
+          const video = new VideoData({
+            base64encode,
+            name: file.name,
+            size: (file.size / (1024 ** 3)).toFixed(2) + " GB",
+            format: file.type,
+          });
+          setVideoData(video);
+        };
+        reader.readAsDataURL(file);
       }
       else {
         toast.error("Failed to upload file. Please try again.");
@@ -109,8 +116,13 @@ const Decoder = ({ setActiveTab }) => {
       <div className={classes.left}>
         {/* Image Container */}
         { 
-          videoData.base64encode ? ( <img className={classes.video} src={videoData.base64encode} alt="Uploaded" /> ) : (
-            <UploadComponent readDataUploaded={readVideoData} fileInput={fileInput} />
+          videoData.base64encode ? ( 
+            <video className={classes.video} controls>
+              <source src={videoData.base64encode} type={videoData.format} />
+            </video>  
+
+          ) : (
+            <UploadComponent readDataUploaded={readVideoData} fileInput={fileInput} fileAccepted={"video/*"} />
           )
         }
 
@@ -142,7 +154,7 @@ const Decoder = ({ setActiveTab }) => {
           
           {/* Delete button */}
           <div className={`${classes.button_action_1} ${classes.destroy_}`} 
-            // onClick={() => { setImageData(new ImageData({})); setMessage(""); }}
+            onClick={() => { setVideoData(new VideoData({})); setMessage(""); }}
           >
             Delete
           </div>
