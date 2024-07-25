@@ -61,12 +61,11 @@ const Encoder = ({ setActiveTab }) => {
   
   const [message, setMessage] = useState({});
   const textareaRef = useRef(null);
+
   const handleChooseFile = useCallback((fileObject) => {
     setMessage(fileObject);
     textareaRef.current.value = fileObject.content;
   }, []);
-
-  /* #endregion */
 
   const [videoData, setVideoData] = useState(new VideoData({}));
   
@@ -92,6 +91,7 @@ const Encoder = ({ setActiveTab }) => {
       setIsEncoding(false);
     }
   }
+  /* #endregion */
 
   /* #region Child Component */
   const EncoderLeftComponent = ({
@@ -105,7 +105,18 @@ const Encoder = ({ setActiveTab }) => {
       const file = e.target.files[0];
 
       if (file) {
-        
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+          const base64encode = e.target.result;
+          const video = new VideoData({
+            base64encode,
+            name: file.name,
+            size: (file.size / (1024 ** 3)).toFixed(2) + " GB",
+            format: file.type,
+          });
+          setVideoData(video);
+        };
+        reader.readAsDataURL(file);
       }
       else {
         toast.error("Failed to upload file. Please try again.");
@@ -115,10 +126,14 @@ const Encoder = ({ setActiveTab }) => {
 
     return (
       <div className={classes.left}>
-        {/* Image Container */}
+        {/* Video Container */}
         { 
-          videoData.base64encode ? ( <img className={classes.video} src={videoData.base64encode} alt="Uploaded" /> ) : (
-            <UploadComponent readDataUploaded={readDataUploaded} fileInput={fileInput} />
+          videoData.base64encode ? ( 
+            <video className={classes.video} controls>
+              <source src={videoData.base64encode} type={videoData.format} />
+            </video>
+            ) : (
+            <UploadComponent readDataUploaded={readDataUploaded} fileInput={fileInput} fileAccepted={"video/*"} />
           )
         }
 
@@ -152,7 +167,7 @@ const Encoder = ({ setActiveTab }) => {
           {/* Delete button */}
           <div 
             className={`${classes.button_action_1} ${classes.destroy_}`} 
-            // onClick={() => {setImageData(new ImageData({})); setMessage({}); textareaRef.current.value = ""}}
+            onClick={() => {setVideoData(new VideoData({})); setMessage({}); textareaRef.current.value = ""}}
           >
             Delete
           </div>
@@ -174,14 +189,14 @@ const Encoder = ({ setActiveTab }) => {
       // console.log("File Choose: ", file);
 
       // Check Condition
-      const checkError = EncodeImageFile.checkFileError(file);
+      const checkError = EncodeVideoFile.checkFileError(file);
       if (checkError) {
         toast.error(checkError);
         return;
       }
 
       // Read the file
-      let readFileResponse = await EncodeImageFile.readFile(file);
+      let readFileResponse = await EncodeVideoFile.readFile(file);
       if (readFileResponse.error) {
         toast.error(readFileResponse.error);
         return;
@@ -280,7 +295,7 @@ const Encoder = ({ setActiveTab }) => {
   )
 }
 
-class EncodeImageFile {
+class EncodeVideoFile {
   static MAX_SIZE_IN_BYTE = 1024 * 1024; // 1 MB
 
   constructor(file) {
@@ -297,15 +312,15 @@ class EncodeImageFile {
   }
 
   static _checkFileSize(file) {
-    if (EncodeImageFile.MAX_SIZE_IN_BYTE > 0 && file.size > EncodeImageFile.MAX_SIZE_IN_BYTE) {
+    if (EncodeVideoFile.MAX_SIZE_IN_BYTE > 0 && file.size > EncodeVideoFile.MAX_SIZE_IN_BYTE) {
       return "File size exceeds the limit. Please upload a smaller file.";
     }
     return null;
   }
 
   static checkFileError(file) {
-    let checkError = EncodeImageFile._checkFileType(file)
-      || EncodeImageFile._checkFileSize(file);
+    let checkError = EncodeVideoFile._checkFileType(file)
+      || EncodeVideoFile._checkFileSize(file);
 
     return checkError;
   }
@@ -330,7 +345,7 @@ class EncodeImageFile {
 
       file.content = content;
       return {
-        data: new EncodeImageFile(file),
+        data: new EncodeVideoFile(file),
         error: null,
       }
     } catch (err) {
