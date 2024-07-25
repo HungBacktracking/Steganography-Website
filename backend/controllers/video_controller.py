@@ -2,6 +2,7 @@ import io
 import base64
 from flask import jsonify, request
 from models.video_model import VideoSteganography
+from moviepy.editor import VideoFileClip
 
 
 def _detect_prefix(data):
@@ -19,30 +20,22 @@ def get_video_encoded():
     print("---------------- Try encode video")
 
     try:
-        print("Get data from request")
         video_base64 = request.json['video']
         message = request.json['message']
-
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-    print(message)
-    
     prefix, new_video_base64 = _detect_prefix(video_base64)
 
     try:
-        print("Decode the base64-encoded video")
         video_data = base64.b64decode(new_video_base64)
-        video_file = io.BytesIO(video_data)
+        
+        frames, audio_data, fps = VideoSteganography.split_video(video_data)
+        modified_frames = VideoSteganography.hide_data_in_frames(frames, message)
+        combined_video = VideoSteganography.combine_frames_audio(modified_frames, audio_data, fps)
 
-        print("Call encode")
-        stego = VideoSteganography()
-        modified_video = stego.hide_data(video_file, message)
+        encoded_video = prefix + base64.b64encode(combined_video).decode()
 
-        print("Encode result video")
-        encoded_video = prefix + base64.b64encode(modified_video.getvalue()).decode()
-
-        print("Return response")
         return jsonify({'video': encoded_video})
     except Exception as e:
         print(str(e))
@@ -55,15 +48,14 @@ def get_video_decoded():
         video_base64 = request.json['video']
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-    
+
     prefix, new_video_base64 = _detect_prefix(video_base64)
 
     try:
         video_data = base64.b64decode(new_video_base64)
-        video_file = io.BytesIO(video_data)
-
-        stego = VideoSteganography()
-        message = stego.recover_data(video_file)
+        
+        frames, _, _ = VideoSteganography.split_video(video_data)
+        message = VideoSteganography.recover_data_from_frames(frames)
 
         return jsonify({'message': message})
     except Exception as e:

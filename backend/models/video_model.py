@@ -1,75 +1,119 @@
+import traceback
+from moviepy.video.io.ffmpeg_writer import ffmpeg_write_video
 import io
-import os
+import math
 import cv2
 import numpy as np
 from PIL import Image
-from moviepy.editor import VideoFileClip, AudioFileClip
-from models.image_model import ImageSteganography
-from models.audio_model import AudioSteganography
+from moviepy.editor import VideoFileClip
+import tempfile
+import os
 
 class VideoSteganography:
-    def __init__(self):
-        self.image_stego = ImageSteganography()
-        self.audio_stego = AudioSteganography()
 
-    def hide_data(self, video_file, message):
-        video = VideoFileClip(video_file)
+    @staticmethod
+    def split_video(video_data):
+        try:
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as temp_video_file:
+                temp_video_file.write(video_data)
+                temp_video_file.flush()
+                video = VideoFileClip(temp_video_file.name)
 
-        # Split video into frames and audio
-        frames = list(video.iter_frames())
-        audio = video.audio
+            frames = [frame for frame in video.iter_frames()]
+            
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as temp_audio_file:
+                video.audio.write_audiofile(temp_audio_file.name)
+                with open(temp_audio_file.name, 'rb') as audio_file:
+                    audio_data = audio_file.read()
+            
+            return frames, audio_data, video.fps
+        except Exception as e:
+            print("An error occurred in split_video:")
+            traceback.print_exc()
 
-        # Encode message into frames and audio
-        encoded_frames = []
-        for frame in frames:
-            image_file = io.BytesIO()
-            Image.fromarray(frame).save(image_file, format='PNG')
-            encoded_frame = self.image_stego.hide_data(image_file, message)
-            encoded_frames.append(cv2.cvtColor(np.array(encoded_frame), cv2.COLOR_RGB2BGR))
+    @staticmethod
+    def combine_frames_audio(frames, audio_data, fps):
+        try:
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as temp_audio_file:
+                temp_audio_file.write(audio_data)
+                temp_audio_file.flush()
+                
+                with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as temp_video_file:
+                    video_buffer = io.BytesIO()
+                    ffmpeg_write_video(temp_video_file.name, frames, fps, codec='libx264')
+                    
+                    # Combine video and audio
+                    combined_path = temp_video_file.name.replace(".mp4", "_combined.mp4")
+                    os.system(f"ffmpeg -i {temp_video_file.name} -i {temp_audio_file.name} -c:v copy -c:a aac {combined_path}")
+                    
+                    with open(combined_path, "rb") as combined_file:
+                        video_buffer.write(combined_file.read())
+                    
+                    return video_buffer.getvalue()
+        except Exception as e:
+            print("An error occurred in combine_frames_audio:")
+            traceback.print_exc()
 
-        audio_file = io.BytesIO()
-        audio.write_audiofile(audio_file)
-        encoded_audio = self.audio_stego.hide_data(audio_file, message)
+    @staticmethod
+    def hide_data_in_frames(frames, data):
+        try:
+            total_frames = len(frames)
+            datapoints = math.ceil(len(data) / total_frames)
+            modified_frames = []
 
-        # Combine encoded frames and audio into video
-        temp_dir = "temp_video_frames"
-        if not os.path.exists(temp_dir):
-            os.makedirs(temp_dir)
-        for i, frame in enumerate(encoded_frames):
-            cv2.imwrite(os.path.join(temp_dir, f"frame_{i:05d}.png"), frame)
+            for i, frame in enumerate(frames):
+                if i * datapoints >= len(data):
+                    modified_frames.append(frame)
+                    continue
 
-        combined_video_path = "temp_combined_video.mp4"
-        os.system(f"ffmpeg -framerate {video.fps} -i {temp_dir}/frame_%05d.png -i {encoded_audio.name} -codec copy {combined_video_path}")
+                img = Image.fromarray(frame)
+                encodetext = data[i * datapoints:(i + 1) * datapoints]
+                newimage = img.copy()
+                VideoSteganography._encoder(newimage, encodetext)
+                modified_frames.append(np.array(newimage))
 
-        with open(combined_video_path, "rb") as f:
-            combined_video = io.BytesIO(f.read())
+            return modified_frames
+        except Exception as e:
+            print("An error occurred in hide_data_in_frames:")
+            traceback.print_exc()
 
-        # Clean up temporary files
-        for file in os.listdir(temp_dir):
-            os.remove(os.path.join(temp_dir, file))
-        os.rmdir(temp_dir)
-        os.remove(encoded_audio.name)
-        os.remove(combined_video_path)
+    @staticmethod
+    def _encoder(newimage, data):
+        try:
+            w, h = newimage.size
+            pixels = np.array(newimage)
+            
+            datalist = [format(ord(i), '08b') for i in data]
+            datalist = ''.join(datalist)
+            data_len = len(datalist)
+            
+            pixel_iter = pixels.flatten()
+            
+            for i in range(data_len):
+                pixel_iter[i] = (pixel_iter[i] & ~1) | int(datalist[i])
+            
+            pixels = pixel_iter.reshape((h, w, 3))
+            newimage.paste(Image.fromarray(pixels))
+        except Exception as e:
+            print("An error occurred in _encoder:")
+            traceback.print_exc()
 
-        combined_video.seek(0)
-        return combined_video
-
-    def recover_data(self, video_file):
-        video = VideoFileClip(video_file)
-
-        # Split video into frames and audio
-        frames = list(video.iter_frames())
-        audio = video.audio
-
-        # Decode message from frames and audio
-        decoded_message = ""
-        for frame in frames:
-            image_file = io.BytesIO()
-            Image.fromarray(frame).save(image_file, format='PNG')
-            decoded_message += self.image_stego.recover_data(image_file)
-
-        audio_file = io.BytesIO()
-        audio.write_audiofile(audio_file)
-        decoded_message += self.audio_stego.recover_data(audio_file)
-
-        return decoded_message
+    @staticmethod
+    def recover_data_from_frames(frames):
+        try:
+            data_bits = []
+            
+            for frame in frames:
+                img = Image.fromarray(frame)
+                pixels = np.array(img).flatten()
+                for pixel in pixels:
+                    data_bits.append(pixel & 1)
+            
+            data_bits = ''.join(map(str, data_bits))
+            data_chars = [chr(int(data_bits[i:i+8], 2)) for i in range(0, len(data_bits), 8)]
+            data_str = ''.join(data_chars)
+            
+            return data_str.rstrip('\x00')
+        except Exception as e:
+            print("An error occurred in recover_data_from_frames:")
+            traceback.print_exc()
