@@ -2,7 +2,7 @@ import React from 'react';
 import { UploadContainer } from '../../assets';
 import classes from './UploadComponent.module.css';
 
-function UploadComponent({ readDataUploaded, fileInput }) {
+function UploadComponent({ readDataUploaded, fileInput, fileAccepted }) {
   return (
     <div className={classes.upload_container} onClick={() => fileInput.current && fileInput.current.click()}>
       <div className={classes.uploadPrompt}>
@@ -15,7 +15,7 @@ function UploadComponent({ readDataUploaded, fileInput }) {
         ref={fileInput}
         onChange={readDataUploaded}
         style={{ display: 'none' }}
-        accept="image/*" // Accept only images
+        accept={fileAccepted}
       />
     </div>
   );

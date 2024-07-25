@@ -145,7 +145,7 @@ const Encoder = ({ setActiveTab }) => {
         {/* Image Container */}
         { 
           imageData.base64encode ? ( <img className={classes.image} src={imageData.base64encode} alt="Uploaded" /> ) : (
-            <UploadComponent readDataUploaded={readDataUploaded} fileInput={fileInput} />
+            <UploadComponent readDataUploaded={readDataUploaded} fileInput={fileInput} fileAccepted={"image/*"} />
           )
         }
 
