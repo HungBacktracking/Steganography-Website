@@ -16,6 +16,8 @@ def _detect_prefix(data):
     return prefix, new_data
 
 def get_video_encoded():
+    print("---------------- Try encode video")
+
     try:
         print("Get data from request")
         video_base64 = request.json['video']
@@ -43,9 +45,12 @@ def get_video_encoded():
         print("Return response")
         return jsonify({'video': encoded_video})
     except Exception as e:
+        print(str(e))
         return jsonify({'error': str(e)}), 500
 
 def get_video_decoded():
+    print("---------------- Try decode video")
+
     try:
         video_base64 = request.json['video']
     except Exception as e:
@@ -62,4 +67,5 @@ def get_video_decoded():
 
         return jsonify({'message': message})
     except Exception as e:
+        print(str(e))
         return jsonify({'error': str(e)}), 500

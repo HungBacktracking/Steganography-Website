@@ -5,7 +5,7 @@ from Crypto.Cipher import AES
 from io import BytesIO
 from PIL import Image
 
-BASE_URL = 'http://127.0.0.1:5000/image'
+BASE_URL = 'http://127.0.0.1:5001/image'
 
 # Utility function to encrypt text with AES
 def encrypt_aes(plaintext, key):

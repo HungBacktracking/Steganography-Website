@@ -5,7 +5,7 @@ from Crypto.Cipher import AES
 from io import BytesIO
 import wave
 
-BASE_URL = 'http://127.0.0.1:5000/audio'
+BASE_URL = 'http://127.0.0.1:5001/audio'
 
 # Utility function to encrypt text with AES
 def encrypt_aes(plaintext, key):
@@ -77,4 +77,4 @@ def test_audio_decode():
     assert decrypted_message == 'Hello, World!'
 
 if __name__ == '__main__':
-    test_audio_encode()
+    pytest.main()

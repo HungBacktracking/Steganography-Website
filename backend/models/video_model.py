@@ -1,78 +1,75 @@
+import io
+import os
 import cv2
 import numpy as np
-import wave
-import struct
-import io
+from PIL import Image
 from moviepy.editor import VideoFileClip, AudioFileClip
+from models.image_model import ImageSteganography
+from models.audio_model import AudioSteganography
 
 class VideoSteganography:
     def __init__(self):
-        self.num_lsb = 8
+        self.image_stego = ImageSteganography()
+        self.audio_stego = AudioSteganography()
 
     def hide_data(self, video_file, message):
         video = VideoFileClip(video_file)
+
+        # Split video into frames and audio
+        frames = list(video.iter_frames())
         audio = video.audio
 
-        # Convert video to frames
-        frames = [frame for frame in video.iter_frames()]
-
-        # Convert message to binary
-        message += '\0'  # Null terminator
-        binary_message = ''.join([format(ord(char), '08b') for char in message])
-        
-        # Encode message into frames
-        frame_idx = 0
-        bit_idx = 0
-
-        while bit_idx < len(binary_message):
-            frame = frames[frame_idx]
-            for i in range(frame.shape[0]):
-                for j in range(frame.shape[1]):
-                    for k in range(frame.shape[2]):
-                        if bit_idx < len(binary_message):
-                            frame[i, j, k] = (frame[i, j, k] & ~1) | int(binary_message[bit_idx])
-                            bit_idx += 1
-            frames[frame_idx] = frame
-            frame_idx += 1
-
-        # Convert frames back to video
-        height, width, layers = frames[0].shape
-        output_video = io.BytesIO()
-        out = cv2.VideoWriter(output_video, cv2.VideoWriter_fourcc(*'XVID'), video.fps, (width, height))
-
+        # Encode message into frames and audio
+        encoded_frames = []
         for frame in frames:
-            out.write(frame)
+            image_file = io.BytesIO()
+            Image.fromarray(frame).save(image_file, format='PNG')
+            encoded_frame = self.image_stego.hide_data(image_file, message)
+            encoded_frames.append(cv2.cvtColor(np.array(encoded_frame), cv2.COLOR_RGB2BGR))
 
-        out.release()
+        audio_file = io.BytesIO()
+        audio.write_audiofile(audio_file)
+        encoded_audio = self.audio_stego.hide_data(audio_file, message)
 
-        # Combine video and audio
-        output_video.seek(0)
-        final_video = VideoFileClip(output_video)
-        final_video = final_video.set_audio(audio)
+        # Combine encoded frames and audio into video
+        temp_dir = "temp_video_frames"
+        if not os.path.exists(temp_dir):
+            os.makedirs(temp_dir)
+        for i, frame in enumerate(encoded_frames):
+            cv2.imwrite(os.path.join(temp_dir, f"frame_{i:05d}.png"), frame)
 
-        final_output = io.BytesIO()
-        final_video.write_videofile(final_output, codec='libx264', audio_codec='aac')
+        combined_video_path = "temp_combined_video.mp4"
+        os.system(f"ffmpeg -framerate {video.fps} -i {temp_dir}/frame_%05d.png -i {encoded_audio.name} -codec copy {combined_video_path}")
 
-        final_output.seek(0)
-        return final_output
+        with open(combined_video_path, "rb") as f:
+            combined_video = io.BytesIO(f.read())
+
+        # Clean up temporary files
+        for file in os.listdir(temp_dir):
+            os.remove(os.path.join(temp_dir, file))
+        os.rmdir(temp_dir)
+        os.remove(encoded_audio.name)
+        os.remove(combined_video_path)
+
+        combined_video.seek(0)
+        return combined_video
 
     def recover_data(self, video_file):
         video = VideoFileClip(video_file)
-        frames = [frame for frame in video.iter_frames()]
 
-        binary_message = ''
+        # Split video into frames and audio
+        frames = list(video.iter_frames())
+        audio = video.audio
+
+        # Decode message from frames and audio
+        decoded_message = ""
         for frame in frames:
-            for i in range(frame.shape[0]):
-                for j in range(frame.shape[1]):
-                    for k in range(frame.shape[2]):
-                        binary_message += str(frame[i, j, k] & 1)
+            image_file = io.BytesIO()
+            Image.fromarray(frame).save(image_file, format='PNG')
+            decoded_message += self.image_stego.recover_data(image_file)
 
-        message = ''
-        for i in range(0, len(binary_message), 8):
-            byte = binary_message[i:i+8]
-            char = chr(int(byte, 2))
-            if char == '\0':
-                break
-            message += char
+        audio_file = io.BytesIO()
+        audio.write_audiofile(audio_file)
+        decoded_message += self.audio_stego.recover_data(audio_file)
 
-        return message
+        return decoded_message
