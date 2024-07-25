@@ -1,13 +1,12 @@
-import traceback
-from moviepy.video.io.ffmpeg_writer import ffmpeg_write_video
-import io
+import tempfile
 import math
-import cv2
+import io
+import os
+import traceback
 import numpy as np
 from PIL import Image
 from moviepy.editor import VideoFileClip
-import tempfile
-import os
+from moviepy.video.io.ffmpeg_writer import ffmpeg_write_video
 
 class VideoSteganography:
 
@@ -40,12 +39,26 @@ class VideoSteganography:
                 
                 with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as temp_video_file:
                     video_buffer = io.BytesIO()
-                    ffmpeg_write_video(temp_video_file.name, frames, fps, codec='libx264')
                     
+                    # Convert frames to the format expected by ffmpeg_write_video
+                    frames_bgr = [frame[:, :, ::-1] for frame in frames]  # Convert RGB to BGR for ffmpeg
+
+                    # Check frame dimensions and types
+                    for i, frame in enumerate(frames_bgr):
+                        if not isinstance(frame, np.ndarray):
+                            print(f"Frame {i} is not a numpy array")
+                        if frame.dtype != np.uint8:
+                            print(f"Frame {i} is not of type uint8")
+                        if len(frame.shape) != 3 or frame.shape[2] != 3:
+                            print(f"Frame {i} has invalid shape: {frame.shape}")
+
+                    # Use ffmpeg_write_video to write the frames to a video file
+                    ffmpeg_write_video(temp_video_file.name, frames_bgr, fps, codec='libx264')
+
                     # Combine video and audio
                     combined_path = temp_video_file.name.replace(".mp4", "_combined.mp4")
                     os.system(f"ffmpeg -i {temp_video_file.name} -i {temp_audio_file.name} -c:v copy -c:a aac {combined_path}")
-                    
+
                     with open(combined_path, "rb") as combined_file:
                         video_buffer.write(combined_file.read())
                     
