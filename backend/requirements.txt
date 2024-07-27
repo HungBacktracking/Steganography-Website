@@ -23,4 +23,5 @@ flask-cors
 python-dotenv
 pytest
 Pillow
+python-magic
 
