@@ -8,7 +8,7 @@ import ImageData from './ImageData';
 // Component
 import classes from './StegImagePage.module.css';
 import { TwoSideTextBox } from '../../components/Box';
-import { PasswordPopup, Spinner } from '../../components/Popup';
+import { PasswordPopup, Spinner, EncodedPopup } from '../../components/Popup';
 import { UploadComponent } from '../../components/UploadComponent';
 
 // Service
@@ -17,10 +17,6 @@ import { ImageServices } from '../../services';
 const PASSWORD_POPUP = 'passwordPopup';
 
 const encode = async (imageData, textData, password) => {
-  // console.log("Handle Encode");
-  // console.log("Image Data: ", imageData);
-  // console.log("Text Data: ", textData);
-  // console.log("Password: ", password);
 
   // Check Condition
   if (!textData) {
@@ -43,9 +39,7 @@ const encode = async (imageData, textData, password) => {
   // Encode Text Data
   const textDataEncode = new TextDataEncode(textData, password);
   const cipherText = textDataEncode.encrypt();
-  // console.log("Cipher Text: ", cipherText);
   let data = await ImageServices.embeddMessage(imageData.base64encode, cipherText);
-  // console.log("Data: ", data);
   return data;
 }
 
@@ -78,6 +72,7 @@ const Encoder = ({ setActiveTab }) => {
   /* #endregion */
 
   const [isEncoding, setIsEncoding] = useState(false);
+  const [encodedData, setEncodedData] = useState(null);
 
   const handleEncode = async (imageData, textData, password) => {
     setIsEncoding(true);
@@ -89,10 +84,12 @@ const Encoder = ({ setActiveTab }) => {
       }
       toast.success("Encode successfully");
       // download this image 
-      const downloadLink = document.createElement('a');
-      downloadLink.href = data.image;
-      downloadLink.download = 'encoded_image.png';
-      downloadLink.click();
+      // const downloadLink = document.createElement('a');
+      // downloadLink.href = data.image;
+      // downloadLink.download = 'encoded_image.png';
+      // downloadLink.click();
+      setEncodedData(data);
+
     } catch (err) {
       // console.log("Error: ", err);
       toast.error("Failed to encode. Please try again.");
@@ -144,7 +141,18 @@ const Encoder = ({ setActiveTab }) => {
       <div className={classes.left}>
         {/* Image Container */}
         { 
-          imageData.base64encode ? ( <img className={classes.image} src={imageData.base64encode} alt="Uploaded" /> ) : (
+          imageData.base64encode ? ( 
+            <div> 
+              <img className={classes.image} src={imageData.base64encode} alt="Uploaded" /> 
+              {encodedData &&(
+                <EncodedPopup
+                  dataInput={imageData}
+                  dataEncoded={encodedData.image}
+                  type="image"
+                />
+              )}
+            </div>
+            ) : (
             <UploadComponent readDataUploaded={readDataUploaded} fileInput={fileInput} fileAccepted={"image/*"} />
           )
         }
@@ -179,7 +187,7 @@ const Encoder = ({ setActiveTab }) => {
           {/* Delete button */}
           <div 
             className={`${classes.button_action_1} ${classes.destroy_}`} 
-            onClick={() => {setImageData(new ImageData({})); setMessage({}); textareaRef.current.value = ""}}
+            onClick={() => {setImageData(new ImageData({})); setMessage({}); setEncodedData({}); textareaRef.current.value = ""}}
           >
             Delete
           </div>

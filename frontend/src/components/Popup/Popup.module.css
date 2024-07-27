@@ -180,3 +180,17 @@
   margin: 0 10px;
   text-align: center;
 }
+
+.downloadButton {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+.downloadButton:hover {
+  background-color: #797979;
+}
