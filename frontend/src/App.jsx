@@ -10,6 +10,7 @@ import AboutPage from './pages/AboutPage/AboutPage';
 import ContactPage from './pages/ContactPage/ContactPage';
 import StegImagePage from './pages/StegImagePage/StegImagePage';
 import StegAudioPage from './pages/StegAudioPage/StegAudioPage';
+import StegVideoPage from './pages/StegVideoPage/StegVideoPage';
 
 import './App.css';
 
@@ -24,6 +25,7 @@ const App = () => {
 				<Route path="/steganography" element={<SteganographyPage />} />
 				<Route path="/steganography/image" element={<StegImagePage />} />
 				<Route path="/steganography/audio" element={<StegAudioPage />} />
+				<Route path="/steganography/video" element={<StegVideoPage />} />
 				<Route path="/about" element={<AboutPage />} />
 				<Route path="/contact" element={<ContactPage />} />
 			</Routes>
