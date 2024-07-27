@@ -1,19 +1,8 @@
 import io
 import base64
 from flask import jsonify, send_file, request
+from backend.utils import detect_prefix
 from models.audio_model import AudioSteganography
-
-
-def _detect_prefix(data):
-    index_of_comma = data.find(',')
-    if index_of_comma != -1:
-        prefix = data[:index_of_comma+1]
-        new_data = data[index_of_comma + 1:]
-    else:
-        prefix = ""
-        new_data = data
-
-    return prefix, new_data
 
 def get_audio_encoded():
     try:
@@ -26,7 +15,7 @@ def get_audio_encoded():
 
     print(message)
     
-    prefix, new_audio_base64 = _detect_prefix(audio_base64)
+    prefix, new_audio_base64 = detect_prefix(audio_base64)
 
     try:
         print("Decode the base64-encoded audio")
@@ -51,7 +40,7 @@ def get_audio_decoded():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
-    prefix, new_audio_base64 = _detect_prefix(audio_base64)
+    prefix, new_audio_base64 = detect_prefix(audio_base64)
 
     try:
         audio_data = base64.b64decode(new_audio_base64)
