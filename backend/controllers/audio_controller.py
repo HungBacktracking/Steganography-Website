@@ -1,7 +1,7 @@
 import io
 import base64
 from flask import jsonify, send_file, request
-from backend.utils import detect_prefix
+from utils import detect_prefix
 from models.audio_model import AudioSteganography
 
 def get_audio_encoded():
