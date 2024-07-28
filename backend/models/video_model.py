@@ -5,6 +5,7 @@ import ffmpeg
 from moviepy.editor import VideoFileClip
 import magic
 from models.audio_model import AudioSteganography
+import cv2
 
 class VideoSteganography:
     def __init__(self):
@@ -19,16 +20,11 @@ class VideoSteganography:
         video_temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".mp4")
         
         try:
-            # Xuất tệp audio với codec pcm_s16le
-            # audio.write_audiofile(audio_temp_file.name, codec='pcm_s16le')
-            # video_without_audio = video.without_audio()
-            # video_without_audio.write_videofile(video_temp_file.name, codec='libx264', audio=False)
-
             # Trích xuất âm thanh từ video sử dụng ffmpeg
-            ffmpeg.input(video_path).output(audio_temp_file.name, acodec='pcm_s16le').run(overwrite_output=True)
+            ffmpeg.input(video_path).output(audio_temp_file.name, acodec='pcm_s16le', vcodec='copy').run(overwrite_output=True)
             
             # Loại bỏ âm thanh từ video gốc sử dụng ffmpeg
-            ffmpeg.input(video_path).output(video_temp_file.name, an=None).run(overwrite_output=True)
+            ffmpeg.input(video_path).output(video_temp_file.name, an=None, vcodec='copy').run(overwrite_output=True)
             
             # Đọc tệp audio vào BytesIO
             with open(audio_temp_file.name, 'rb') as f:
@@ -73,13 +69,17 @@ class VideoSteganography:
             
             # Lấy fps của video gốc
             fps = VideoSteganography.get_video_fps(original_video_path)
+            # capture = cv2.VideoCapture(original_video_path) # Stores OG Video into a Capture Window
+            # fps = capture.get(cv2.CAP_PROP_FPS) # Extracts FPS of OG Video
+            for i in range(10):
+                print("FPS: ", fps)
             
             final_video_temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".mp4")
             
             # Kết hợp audio và video sử dụng ffmpeg-python
-            video_input = ffmpeg.input(video_temp_file.name)
-            audio_input = ffmpeg.input(audio_temp_file.name)
-            ffmpeg.output(video_input, audio_input, final_video_temp_file.name, vcodec='copy', acodec='aac', strict='very').run(overwrite_output=True)
+            video_input = ffmpeg.input(video_temp_file.name, r=fps)
+            audio_input = ffmpeg.input(audio_temp_file.name, r=fps)
+            ffmpeg.output(video_input, audio_input, final_video_temp_file.name, vcodec='copy', acodec='aac', strict='very', audio_bitrate='320k', r=fps).run(overwrite_output=True)
             
             final_video_io = BytesIO()
             with open(final_video_temp_file.name, 'rb') as f:
@@ -126,9 +126,11 @@ class VideoSteganography:
             
             # Chuyển đổi về định dạng đúng nếu cần thiết
             corrected_audio_temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
-            ffmpeg.input(temp_audio_file.name).output(corrected_audio_temp_file.name, codec='pcm_s16le').run(overwrite_output=True)
+            ffmpeg.input(temp_audio_file.name).output(corrected_audio_temp_file.name, codec='pcm_s16le', vcodec='copy').run(overwrite_output=True)
             with open(corrected_audio_temp_file.name, 'rb') as f:
                 corrected_audio_io = BytesIO(f.read())
+
+        print("Testing: ", message)
 
         return self.combine_audio_video(corrected_audio_io, video_io, temp_video_path)
     
