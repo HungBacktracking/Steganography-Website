@@ -23,5 +23,4 @@ flask-cors
 python-dotenv
 pytest
 Pillow
-python-magic
-
+python-magic-bin==0.4.14
