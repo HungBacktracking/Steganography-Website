@@ -64,7 +64,7 @@
 .audio_container {
     /* height: 35vh; */
     min-height: 300px;
-    display: flex;
+    display: flex   ;
     align-items: center;
     justify-content: center;
 }
@@ -74,7 +74,7 @@
     margin: 0 !important;
     background-image: none !important; /* Remove background image */
     /* border: none !important; */
-    width: 100%;
+    width: 100%!important;
     height: fit-content;
 }
 

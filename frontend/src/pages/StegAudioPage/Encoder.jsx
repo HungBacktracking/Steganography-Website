@@ -2,6 +2,7 @@ import classes from './StegAudioPage.module.css';
 import { TwoSideTextBox } from '../../components/Box';
 import { useRef, useState } from 'react';
 import UploadComponent from '../../components/UploadComponent/UploadComponent'
+import AudioVisualizer from '../../components/Visualizer/AudioVisualizer';
 
 const Encoder = ({ setActiveTab }) => {
   return (
@@ -22,10 +23,15 @@ const Encoder = ({ setActiveTab }) => {
 
 const EncoderLeftComponent = ({}) => {
   const fileInput = useRef(null);
+  const [audioBlob, setAudioBlob] = useState(null);
   const [audio, setAudio] = useState(null);
   const [audioSize, setAudioSize] = useState("N/A");
   const audioFormat = "WAV";
   const [audioTime, setAudioTime] = useState("N/A");
+
+  const handleAudioContainerClick = () => {
+    if(fileInput.current) fileInput.current.click();
+  };
 
   const handleFileSelection = (e) => {
     const file = e.target.files[0];
@@ -42,6 +48,7 @@ const EncoderLeftComponent = ({}) => {
       reader.onload = () => {
         setAudio(reader.result);
         setAudioSize((file.size / (1024 * 1024)).toFixed(2) + " MB");
+        setAudioBlob(file);
 
         // Get audio duration
         const audio = new Audio(reader.result);
@@ -70,9 +77,10 @@ const EncoderLeftComponent = ({}) => {
   return (
       <div className={classes.left}>
         <div className={`${classes.audio_container} ${audio ? classes.audio_uploaded : ''}`}
-          onClick={(e) => {fileInput.current.click()}}>
+          onClick={handleAudioContainerClick}>
           {audio ? (
-            <audio controls src={audio} style={{ maxWidth: '100%', maxHeight: 'auto'}} />
+            // <audio controls src={audio} style={{ maxWidth: '100%', maxHeight: 'auto'}} />
+            <AudioVisualizer blob={audioBlob} />  
           ) : (
             // <div className={classes.uploadPrompt}>Click to upload an audio file</div>
             <UploadComponent 
