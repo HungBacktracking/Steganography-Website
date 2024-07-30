@@ -29,15 +29,6 @@ const encode = async (imageData, textData, password) => {
     return;
   }
 
-  // Fake Encode
-  // await new Promise((resolve, reject) => {
-  //   setTimeout(() => {
-  //     resolve();
-  //   }, 2000);
-  // });
-
-
-  // Encode Text Data
   const textDataEncode = new TextDataEncode(textData, password);
   const cipherText = textDataEncode.encrypt();
   let data = await ImageServices.embeddMessage(imageData.base64encode, cipherText);

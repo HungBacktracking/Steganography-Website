@@ -4,87 +4,71 @@ import { useCallback, useRef, useState } from 'react';
 import UploadComponent from '../../components/UploadComponent/UploadComponent'
 import AudioVisualizer from '../../components/Visualizer/AudioVisualizer';
 import EncodeFile from '../../utils/EncodeFile';
+import { PasswordPopup, Spinner, EncodedPopup } from '../../components/Popup';
+import { toast } from 'react-toastify';
+import { TextDataEncode } from '../../entities'; 
+import { AudioService } from '../../services'
+
+const PASSWORD_POPUP = 'passwordPopup';
+
+const encode = async (base64Encodedata, message, password) => {
+
+  // Check Condition
+  if (!message) {
+    toast.error("No data to encode. Please try again.");
+    return;
+  }
+  if (!base64Encodedata) {
+    toast.error("No audio to encode. Please try again.");
+    return;
+  }
+
+  const textDataEncode = new TextDataEncode(message, password);
+  const cipherText = textDataEncode.encrypt();
+  let data = await AudioService.embeddMessage(base64Encodedata, cipherText);
+  const downloadLink = document.createElement('a');
+  downloadLink.href = data.audio;
+  downloadLink.download = 'encoded_audio.wav';
+  downloadLink.click();
+  return data;
+}
 
 const Encoder = ({ setActiveTab }) => {
   const textAreaRef = useRef(null);
-  const [message, setMessage] = useState({});
   const handleChooseFile = useCallback((fileObject) => {
-    setMessage(fileObject);
     textAreaRef.current.value = fileObject.content;
   }, []); 
 
-  const EncoderRightComponent = ({
-    handleChooseFile,
-    textareaRef,
-    message, setMessage,
-  }) => {
-    const [textData, setTextData] = useState(textareaRef.current?.value || "");
-    const handleFileChange = async (e) => {
-      if (!e.target.files || e.target.files.length === 0) return;
+  const [isEncoding, setIsEncoding] = useState(false);
+  const [audioData, setAudioData] = useState();
+  const [encodedData, setEncodedData] = useState();
   
-      const file = e.target.files[0];
-      // console.log("File Choose: ", file);
-  
-      // Check Condition
-      const checkError = EncodeFile.checkFileError(file);
-      if (checkError) {
-        toast.error(checkError);
+  const [showPopup, setShowPopup] = useState(false);
+  const togglePopup = (popupName) => {
+    setShowPopup((prevState) => ({
+      ...prevState,
+      [popupName]: !prevState[popupName]
+    }));
+  };
+  const isOpen = (popupName) => showPopup[popupName] || false;
+
+  const handleEncode = async(data, message, password) => {
+    setIsEncoding(true);
+    try{
+      let encodedData = await encode(data, message, password);
+      if(!encodedData) {
+        toast.error("Failed to encode. Please try again.");
         return;
       }
-  
-      // Read the file
-      let readFileResponse = await EncodeFile.readFile(file);
-      if (readFileResponse.error) {
-        toast.error(readFileResponse.error);
-        return;
-      }
-  
-      let fileObject = readFileResponse.data;
-      console.log("File Object: ", fileObject);
-      handleChooseFile(fileObject);
+      toast.success("Encode successfully");
+
+      setEncodedData(encodedData);
+    }catch (err) {
+      console.log("Error: ", err);
+      toast.error("Failed to encode. Please try again.");
+    } finally {
+      setIsEncoding(false);
     }
-  
-  
-    return (
-      <div className={classes.right}>
-        <div className={classes.header_notepad}>
-          <div className={classes.small_title}>Notepad</div>
-          <div className={`${classes.action_list} ms-auto`}>
-            <div className={classes.button_action_2}
-              onClick={(e) => {
-                e.target.nextElementSibling.click();
-              }}>
-              Open
-            </div>
-            <input type="file" style={{ display: 'none' }}
-              accept=".txt"
-              onChange={handleFileChange}
-              multiple={false}
-            />
-            <div className={classes.button_action_2} 
-              onClick={() => {setMessage({}); textareaRef.current.value = ""}}
-            >
-              New
-            </div>
-          </div>
-        </div>
-        <textarea
-          className={classes.notepad}
-          ref={textareaRef}
-          value={textData}
-          onChange={(e) => setTextData(e.target.value)}
-        >
-        </textarea>
-        <div className={classes.info_list + " mt-auto"}>
-          {/* Capacity */}
-          <TwoSideTextBox className={"flex-[70%] p-[0.7vw]"} title="Capacity"
-            content={message.size ? `${message.size}B` : `N/A`}
-          />
-          {/* File name */}
-          <TwoSideTextBox className={"flex-[70%] p-[0.7vw]"} title="File name" content={message.name || `N/A`} />
-        </div>
-      </div>
-    )
   }
 
   return (
@@ -96,19 +80,45 @@ const Encoder = ({ setActiveTab }) => {
           </div>
           
           <div className={classes.steg_wrapper}>
-              <EncoderLeftComponent />
+              <EncoderLeftComponent 
+                togglePopup={togglePopup}
+                setData={setAudioData}
+              />
               <EncoderRightComponent 
                 textareaRef={textAreaRef}
                 handleChooseFile={handleChooseFile}
-                message={message}
-                setMessage={setMessage}
               />
           </div>
+
+          <div>
+        {
+          isOpen(PASSWORD_POPUP) && (
+            <PasswordPopup
+              onConfirm={(password) => {
+                handleEncode(audioData, textAreaRef.current?.value || "", password);
+              }
+              }
+              onCancel={() => {
+                toast.warning("Encode canceled");
+              }}
+              onClose={() => togglePopup(PASSWORD_POPUP)}
+            />
+          )
+        }
+
+        {
+          isEncoding && <Spinner />
+        }
+      </div>
       </div>
   )
 }
 
-const EncoderLeftComponent = ({}) => {
+
+const EncoderLeftComponent = ({
+  togglePopup,
+  setData
+}) => {
   const fileInput = useRef(null);
   const [audioBlob, setAudioBlob] = useState(null);
   const [audio, setAudio] = useState(null);
@@ -134,7 +144,7 @@ const EncoderLeftComponent = ({}) => {
       const reader = new FileReader();
       reader.onload = () => {
         setAudio(reader.result);
-        console.log("Audio: ", reader.result);
+        setData(reader.result);
         setAudioSize((file.size / (1024 * 1024)).toFixed(2) + " MB");
         setAudioBlob(file);
 
@@ -205,11 +215,87 @@ const EncoderLeftComponent = ({}) => {
           />
 
         <div className={classes.action}>
-            <div className={`${classes.button_action_1} ${classes.success_}`}>Encode</div>
-            <div className={`${classes.button_action_1} ${classes.destroy_}`}>Delete</div>
+            <div className={`${classes.button_action_1} ${classes.success_}`}
+              onClick={() => togglePopup(PASSWORD_POPUP)}>Encode</div>
+            <div className={`${classes.button_action_1} ${classes.destroy_}`}
+              onClick={() => {setData(null); setAudio(null);}}>Delete</div>
         </div>
       </div>
   );
+}
+
+const EncoderRightComponent = ({
+  handleChooseFile,
+  textareaRef,
+}) => {
+  const [message, setMessage] = useState({});
+  const [textData, setTextData] = useState(textareaRef.current?.value || "");
+  const handleFileChange = async (e) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+
+    const file = e.target.files[0];
+    // console.log("File Choose: ", file);
+
+    // Check Condition
+    const checkError = EncodeFile.checkFileError(file);
+    if (checkError) {
+      toast.error(checkError);
+      return;
+    }
+
+    // Read the file
+    let readFileResponse = await EncodeFile.readFile(file);
+    if (readFileResponse.error) {
+      toast.error(readFileResponse.error);
+      return;
+    }
+
+    let fileObject = readFileResponse.data;
+    handleChooseFile(fileObject);
+    setTextData(fileObject.content);
+  }
+
+
+  return (
+    <div className={classes.right}>
+      <div className={classes.header_notepad}>
+        <div className={classes.small_title}>Notepad</div>
+        <div className={`${classes.action_list} ms-auto`}>
+          <div className={classes.button_action_2}
+            onClick={(e) => {
+              e.target.nextElementSibling.click();
+            }}>
+            Open
+          </div>
+          <input type="file" style={{ display: 'none' }}
+            accept=".txt"
+            onChange={handleFileChange}
+            multiple={false}
+          />
+          <div className={classes.button_action_2} 
+            onClick={() => {setMessage({}); textareaRef.current.value = ""}}
+          >
+            New
+          </div>
+        </div>
+      </div>
+      <textarea
+        className={classes.notepad}
+        ref={textareaRef}
+        value={textData}
+        onChange={(e) => setTextData(e.target.value)}
+      >
+      </textarea>
+      <div className={classes.info_list + " mt-auto"}>
+        {/* Capacity */}
+        <TwoSideTextBox className={"flex-[70%] p-[0.7vw]"} title="Capacity"
+          content={message.size ? `${message.size}B` : `N/A`}
+        />
+        {/* File name */}
+        <TwoSideTextBox className={"flex-[70%] p-[0.7vw]"} title="File name" content={message.name || `N/A`} />
+      </div>
+    </div>
+  )
 }
 
 

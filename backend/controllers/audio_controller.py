@@ -11,6 +11,7 @@ def get_audio_encoded():
         message = request.json['message']
 
     except Exception as e:
+        print("error when encode audio: ", e)
         return jsonify({'error': str(e)}), 500
 
     print(message)

@@ -4,8 +4,10 @@ import WaveSurfer from "wavesurfer.js";
 const formWaveSurferOptions = ref => ({
   container: ref,
   waveColor: "#eee",
-  progressColor: "OrangeRed",
-  cursorColor: "OrangeRed",
+  progressColor: "#97c3fc",
+  // progressColor: "OrangeRed",
+  cursorColor: "#97c3fc",
+  // cursorColor: "OrangeRed",
   barWidth: 4,
   barRadius: 6,
   responsive: true,
@@ -56,11 +58,12 @@ export default function AudioVisualizer({ blob }) {
 
   return (
     <div className="w-full">
-      <div id="waveform" ref={waveformRef} className="bg-gray-800 p-4 rounded-lg" />
+      <div id="waveform" ref={waveformRef} className="bg-white p-4 rounded-lg" />
 
       <div className="controls flex items-center justify-around mt-4">
         <button
           className="bg-orange-500 text-white rounded-full p-2 w-16 h-16 flex items-center justify-center mr-4"
+          // className="bg-white text-black rounded-full p-2 w-16 h-16 flex items-center justify-center mr-4"
           onClick={handlePlayPause}
         >
           {!playing ? "Play" : "Pause"}
