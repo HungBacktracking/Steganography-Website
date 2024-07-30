@@ -6,7 +6,7 @@ const SteganographyPage = () => {
     return (
         <div className={classes.container_page}>
             <div className={classes.content}>
-                Hello
+                {/* Hello */}
             </div>
             <div className={classes.steg_options}>
                 <Link className={classes.steg_item} to='/steganography/image'>
