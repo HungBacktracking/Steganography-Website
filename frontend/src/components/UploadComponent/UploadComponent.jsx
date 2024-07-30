@@ -7,7 +7,7 @@ function UploadComponent({
   fileInput,
   accept }) {
   return (
-    <div className={classes.upload_container} onClick={() => fileInput.current && fileInput.current.click()}>
+    <div className={classes.upload_container}>
       <div className={classes.uploadPrompt}>
         <img src={UploadContainer} alt="Upload" />
         <p>Choose a file or drag & drop it here</p>

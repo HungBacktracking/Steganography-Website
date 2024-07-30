@@ -1,6 +1,7 @@
 import classes from './StegAudioPage.module.css';
 import { TwoSideTextBox } from '../../components/Box';
 import { useRef, useState } from 'react';
+import UploadComponent from '../../components/UploadComponent/UploadComponent'
 
 const Encoder = ({ setActiveTab }) => {
   return (
@@ -20,16 +21,11 @@ const Encoder = ({ setActiveTab }) => {
 }
 
 const EncoderLeftComponent = ({}) => {
-
   const fileInput = useRef(null);
   const [audio, setAudio] = useState(null);
   const [audioSize, setAudioSize] = useState("N/A");
   const audioFormat = "WAV";
   const [audioTime, setAudioTime] = useState("N/A");
-
-  const handleAudioContainerClick = () => {
-    fileInput.current.click();
-  };
 
   const handleFileSelection = (e) => {
     const file = e.target.files[0];
@@ -73,19 +69,25 @@ const EncoderLeftComponent = ({}) => {
 
   return (
       <div className={classes.left}>
-        <div className={`${classes.audio_container} ${audio ? classes.audio_uploaded : ''}`} onClick={handleAudioContainerClick}>
+        <div className={`${classes.audio_container} ${audio ? classes.audio_uploaded : ''}`}
+          onClick={(e) => {fileInput.current.click()}}>
           {audio ? (
             <audio controls src={audio} style={{ maxWidth: '100%', maxHeight: 'auto'}} />
           ) : (
-            <div className={classes.uploadPrompt}>Click to upload an audio file</div>
+            // <div className={classes.uploadPrompt}>Click to upload an audio file</div>
+            <UploadComponent 
+              readDataUploaded={handleFileSelection}
+              accept=".wav"
+              fileInput={fileInput}
+            />
           )}
-          <input
+          {/* <input
             type="file"
             accept=".wav" // Accept only .wav files
             style={{ display: 'none' }} // Hide the file input
             onChange={handleFileSelection}
             ref={fileInput}
-          />
+          /> */}
         </div>
           
           {/* <div className={classes.info}>Duration</div> */}

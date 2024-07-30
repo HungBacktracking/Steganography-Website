@@ -1,6 +1,7 @@
 import classes from './StegAudioPage.module.css';
 import { TwoSideTextBox } from '../../components/Box';
 import { useRef, useState } from 'react';
+import UploadComponent from '../../components/UploadComponent/UploadComponent';
 
 const Decoder = ({ setActiveTab }) => {
   return (
@@ -24,7 +25,7 @@ const DecoderLeftComponent = ({}) => {
 
 
   const handleAudioContainerClick = () => {
-    fileInput.current.click();
+    if(fileInput.current) fileInput.current.click();
   };
 
   const handleFileSelection = (e) => {
@@ -44,15 +45,12 @@ const DecoderLeftComponent = ({}) => {
           {audio ? (
             <audio controls src={audio} style={{ maxWidth: '100%', maxHeight: '100%' }} />
           ) : (
-            <div className={classes.uploadPrompt}>Click to upload an audio file</div>
+            <UploadComponent 
+              readDataUploaded={handleFileSelection}
+              accept=".wav"
+              fileInput={fileInput}
+            />
           )}
-          <input
-            type="file"
-            accept=".wav" // Accept only .wav files
-            style={{ display: 'none' }} // Hide the file input
-            onChange={handleFileSelection}
-            ref={fileInput}
-          />
         </div>
 
           {/* <div className={classes.info}>Resolution</div> */}

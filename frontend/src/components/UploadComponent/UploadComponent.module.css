@@ -1,6 +1,6 @@
 .upload_container {
     display: flex;
-    flex: 0;
+    flex: 1;
     border: 2px dashed rgba(0, 0, 0, 0.5); /* Chuyển sang màu viền đen */
     border-radius: 5px;
     align-items: center;
