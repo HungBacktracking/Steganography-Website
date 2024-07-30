@@ -266,3 +266,10 @@
 .video {
     border-radius: 5px;
 }
+
+.video_container{
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

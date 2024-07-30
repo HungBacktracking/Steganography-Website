@@ -56,12 +56,15 @@ const Encoder = ({ setActiveTab }) => {
     setIsEncoding(true);
     try{
       let encodedData = await encode(data, message, password);
+      console.log({encodedData});
+
       if(!encodedData) {
         toast.error("Failed to encode. Please try again.");
         return;
       }
       toast.success("Encode successfully");
 
+      // console.log({encodedData});
       setEncodedData(encodedData);
     }catch (err) {
       console.log("Error: ", err);

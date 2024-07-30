@@ -8,18 +8,20 @@ import VideoData from './VideoData';
 import { UploadComponent } from '../../components/UploadComponent';
 
 import { PasswordPopup, Spinner } from '../../components/Popup';
+import { VideoServices } from '../../services';
 
 const PASSWORD_POPUP = 'passwordPopup';
 
-const decode = async (videoData, password) => {
-  if (!videoData.base64encode) {
-    toast.error("Please upload an image first.");
+const decode = async (videoDatabase64, password) => {
+  console.log()
+  if (!videoDatabase64) {
+    toast.error("Please upload an video first.");
     return;
   }
 
 //   let data = await ImageServices.decodeMessage(imageData.base64encode);
   let data = null; 
-
+  data = await VideoServices.decodeMessage(audioBase64Data);
   if (data) {
     return data.message;
   }
@@ -42,14 +44,14 @@ const Decoder = ({ setActiveTab }) => {
   };
   const isOpen = (popupName) => showPopup[popupName] || false;
 
-  const handleDecode = async (videoData, password = "") => {
+  const handleDecode = async (videoDatabase64, password = "") => {
     setIsDecoding(true);
     try{
-    //   let cipherText = await decode(videoData);
-    //   // console.log("cipherText: ", cipherText);
-    //   // console.log("password: ", password);
-    //   let textData = TextDataEncode.fromCipherText(cipherText, password);
-    //   let message = textData.decrypt();
+      let cipherText = await decode(videoDatabase64);
+      console.log("cipherText: ", cipherText);
+      console.log("password: ", password);
+      let textData = TextDataEncode.fromCipherText(cipherText, password);
+      let message = textData.decrypt();
       
       if(!message){
         toast.error("Decode failed. Try another password.");
@@ -57,7 +59,7 @@ const Decoder = ({ setActiveTab }) => {
         return;
       }
       // console.log({message});
-    //   setMessage(message);
+      setMessage(message);
     }
     catch(e){
       // console.log(e);
@@ -115,16 +117,17 @@ const Decoder = ({ setActiveTab }) => {
     return (
       <div className={classes.left}>
         {/* Image Container */}
-        { 
-          videoData.base64encode ? ( 
-            <video className={classes.video} controls>
-              <source src={videoData.base64encode} type={videoData.format} />
-            </video>  
-
-          ) : (
-            <UploadComponent readDataUploaded={readVideoData} fileInput={fileInput} fileAccepted={"video/*"} />
-          )
-        }
+        <div className={`${classes.video_container}`}>
+          { 
+            videoData.base64encode ? ( 
+              <video className={classes.video} controls>
+                <source src={videoData.base64encode} type={videoData.format} />
+              </video>
+              ) : (
+              <UploadComponent readDataUploaded={readVideoData} fileInput={fileInput} fileAccepted={"video/*"} />
+            )
+          }
+        </div>
 
         {/* Resolution */}
         {/* <TwoSideTextBox 
@@ -222,7 +225,7 @@ const Decoder = ({ setActiveTab }) => {
           isOpen(PASSWORD_POPUP) && (
             <PasswordPopup
               onConfirm={(password) => {
-                handleDecode(imageData, password);
+                handleDecode(videoData.base64encode, password);
               }
               }
               onCancel={() => {

@@ -9,35 +9,32 @@ import classes from './StegVideoPage.module.css';
 import { TwoSideTextBox } from '../../components/Box';
 import { PasswordPopup, Spinner } from '../../components/Popup';
 import { UploadComponent } from '../../components/UploadComponent';
-
+import { TextDataEncode } from '../../entities';
+import { VideoServices } from '../../services'
 // Service
 
 const PASSWORD_POPUP = 'passwordPopup';
 
-const encode = async (videoData, textData, password) => {
+const encode = async (videoDatabase64, textData, password) => {
 
   // Check Condition
   if (!textData) {
     toast.error("No data to encode. Please try again.");
     return;
   }
-  if (!videoData.base64encode) {
-    toast.error("No image to encode. Please try again.");
+  if (!videoDatabase64) {
+    toast.error("No video to encode. Please try again.");
     return;
-  }
-
-  // Fake Encode
-  // await new Promise((resolve, reject) => {
-  //   setTimeout(() => {
-  //     resolve();
-  //   }, 2000);
-  // });
-
-
-  // Encode Text Data
- 
+  } 
   let data = null;
 
+  const textDataEncode = new TextDataEncode(message, password);
+  const cipherText = textDataEncode.encrypt();
+  data = await VideoServices.embeddMessage(base64Encodedata, cipherText);
+  const downloadLink = document.createElement('a');
+  downloadLink.href = data.audio;
+  downloadLink.download = 'encoded_video.wav';
+  downloadLink.click();
   return data;
 }
 
@@ -71,20 +68,20 @@ const Encoder = ({ setActiveTab }) => {
   
   const [isEncoding, setIsEncoding] = useState(false);
 
-  const handleEncode = async (videoData, textData, password) => {
+  const handleEncode = async (videoDatabase64, textData, password) => {
     setIsEncoding(true);
     try {
-      let data = await encode(videoData, textData, password);
+      let data = await encode(videoDatabase64, textData, password);
       if(!data) {
         toast.error("Failed to encode. Please try again.");
         return;
       }
       toast.success("Encode successfully");
       // download this image 
-      // const downloadLink = document.createElement('a');
-      // downloadLink.href = data.image;
-      // downloadLink.download = 'encoded_video.mp4';
-      // downloadLink.click();
+      const downloadLink = document.createElement('a');
+      downloadLink.href = data.video;
+      downloadLink.download = 'encoded_video.mp4';
+      downloadLink.click();
     } catch (err) {
       toast.error("Failed to encode. Please try again.");
     } finally {
@@ -127,15 +124,17 @@ const Encoder = ({ setActiveTab }) => {
     return (
       <div className={classes.left}>
         {/* Video Container */}
-        { 
-          videoData.base64encode ? ( 
-            <video className={classes.video} controls>
-              <source src={videoData.base64encode} type={videoData.format} />
-            </video>
-            ) : (
-            <UploadComponent readDataUploaded={readDataUploaded} fileInput={fileInput} fileAccepted={"video/*"} />
-          )
-        }
+        <div className={`${classes.video_container}`}>
+          { 
+            videoData.base64encode ? ( 
+              <video className={classes.video} controls>
+                <source src={videoData.base64encode} type={videoData.format} />
+              </video>
+              ) : (
+              <UploadComponent readDataUploaded={readDataUploaded} fileInput={fileInput} fileAccepted={"video/*"} />
+            )
+          }
+        </div>
 
         {/* Resolution */}
         {/* <TwoSideTextBox
@@ -276,7 +275,7 @@ const Encoder = ({ setActiveTab }) => {
           isOpen(PASSWORD_POPUP) && (
             <PasswordPopup
               onConfirm={(password) => {
-                handleEncode(imageData, textareaRef.current?.value || "", password);
+                handleEncode(videoData.base64encode, textareaRef.current?.value || "", password);
               }
               }
               onCancel={() => {
