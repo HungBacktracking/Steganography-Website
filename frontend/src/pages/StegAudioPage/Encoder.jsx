@@ -1,10 +1,92 @@
 import classes from './StegAudioPage.module.css';
 import { TwoSideTextBox } from '../../components/Box';
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import UploadComponent from '../../components/UploadComponent/UploadComponent'
 import AudioVisualizer from '../../components/Visualizer/AudioVisualizer';
+import EncodeFile from '../../utils/EncodeFile';
 
 const Encoder = ({ setActiveTab }) => {
+  const textAreaRef = useRef(null);
+  const [message, setMessage] = useState({});
+  const handleChooseFile = useCallback((fileObject) => {
+    setMessage(fileObject);
+    textAreaRef.current.value = fileObject.content;
+  }, []); 
+
+  const EncoderRightComponent = ({
+    handleChooseFile,
+    textareaRef,
+    message, setMessage,
+  }) => {
+    const [textData, setTextData] = useState(textareaRef.current?.value || "");
+    const handleFileChange = async (e) => {
+      if (!e.target.files || e.target.files.length === 0) return;
+  
+      const file = e.target.files[0];
+      // console.log("File Choose: ", file);
+  
+      // Check Condition
+      const checkError = EncodeFile.checkFileError(file);
+      if (checkError) {
+        toast.error(checkError);
+        return;
+      }
+  
+      // Read the file
+      let readFileResponse = await EncodeFile.readFile(file);
+      if (readFileResponse.error) {
+        toast.error(readFileResponse.error);
+        return;
+      }
+  
+      let fileObject = readFileResponse.data;
+      console.log("File Object: ", fileObject);
+      handleChooseFile(fileObject);
+    }
+  
+  
+    return (
+      <div className={classes.right}>
+        <div className={classes.header_notepad}>
+          <div className={classes.small_title}>Notepad</div>
+          <div className={`${classes.action_list} ms-auto`}>
+            <div className={classes.button_action_2}
+              onClick={(e) => {
+                e.target.nextElementSibling.click();
+              }}>
+              Open
+            </div>
+            <input type="file" style={{ display: 'none' }}
+              accept=".txt"
+              onChange={handleFileChange}
+              multiple={false}
+            />
+            <div className={classes.button_action_2} 
+              onClick={() => {setMessage({}); textareaRef.current.value = ""}}
+            >
+              New
+            </div>
+          </div>
+        </div>
+        <textarea
+          className={classes.notepad}
+          ref={textareaRef}
+          value={textData}
+          onChange={(e) => setTextData(e.target.value)}
+        >
+        </textarea>
+        <div className={classes.info_list + " mt-auto"}>
+          {/* Capacity */}
+          <TwoSideTextBox className={"flex-[70%] p-[0.7vw]"} title="Capacity"
+            content={message.size ? `${message.size}B` : `N/A`}
+          />
+          {/* File name */}
+          <TwoSideTextBox className={"flex-[70%] p-[0.7vw]"} title="File name" content={message.name || `N/A`} />
+        </div>
+      </div>
+    )
+  }
+
   return (
       <div className={classes.steg_container}>
           {/* Title */}
@@ -15,7 +97,12 @@ const Encoder = ({ setActiveTab }) => {
           
           <div className={classes.steg_wrapper}>
               <EncoderLeftComponent />
-              <EncoderRightComponent />
+              <EncoderRightComponent 
+                textareaRef={textAreaRef}
+                handleChooseFile={handleChooseFile}
+                message={message}
+                setMessage={setMessage}
+              />
           </div>
       </div>
   )
@@ -47,6 +134,7 @@ const EncoderLeftComponent = ({}) => {
       const reader = new FileReader();
       reader.onload = () => {
         setAudio(reader.result);
+        console.log("Audio: ", reader.result);
         setAudioSize((file.size / (1024 * 1024)).toFixed(2) + " MB");
         setAudioBlob(file);
 
@@ -124,27 +212,6 @@ const EncoderLeftComponent = ({}) => {
   );
 }
 
-const EncoderRightComponent = ({}) => {
-  return (
-      <div className={classes.right}>
-          <div className={classes.header_notepad}>
-              <div className={classes.small_title}>Notepad</div>
-              <div className={`${classes.action_list} ms-auto`}>
-                  <div className={classes.button_action_2}>Open</div>
-                  <div className={classes.button_action_2}>Save</div>
-                  <div className={classes.button_action_2}>Save as</div>
-                  <div className={classes.button_action_2}>New</div>
-              </div>
-          </div>
-          <div className={classes.notepad}></div>
-          <div className={classes.info_list + " mt-auto"}>
-              {/* <div className={classes.info_item_capacity}>Capacity</div> */}
-              <TwoSideTextBox className={"flex-[70%] p-[0.7vw]"} title="Capacity" content="2.1Kb/ 10Kb" />
-              {/* <div className={classes.info_item_path}>Path</div> */}
-              <TwoSideTextBox className={"flex-[70%] p-[0.7vw]"} title="Path" content="D:\path\sub_path" />
-          </div>
-      </div>
-  )
-}
+
 
 export default Encoder;
