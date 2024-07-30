@@ -112,6 +112,7 @@ const Encoder = ({ setActiveTab }) => {
           handleChooseFile={handleChooseFile}
           textareaRef={textareaRef}
           message={message}
+          setMessage={setMessage}
         />
       </div>
 
@@ -229,7 +230,7 @@ const EncoderLeftComponent = ({
 const EncoderRightComponent = ({
   handleChooseFile,
   textareaRef,
-  message
+  message, setMessage
 }) => {
   const [textData, setTextData] = useState(textareaRef.current?.value || "");
   const handleFileChange = async (e) => {
@@ -254,6 +255,8 @@ const EncoderRightComponent = ({
 
     let fileObject = readFileResponse.data;
     handleChooseFile(fileObject);
+    setTextData(fileObject.content);
+    
   }
 
 
