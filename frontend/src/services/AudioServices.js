@@ -24,7 +24,7 @@ const embeddMessage = async (base64Data, message) => {
 const decodeMessage = async (base64Data) => {
   // Dummy sample code
   let data = {
-    image: base64Data
+    audio: base64Data
   };
   try{
     let response = await http.post("/audio/decoded", data);

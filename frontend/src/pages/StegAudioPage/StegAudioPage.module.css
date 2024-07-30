@@ -180,7 +180,7 @@
 .notepad {
     /* height: 60vh; */
     flex: 1;
-    padding: 2vw 1vw;
+    padding: 2vh 1vw;
     border-radius: 5px;
     border: 2px solid rgba(0, 0, 0, 0.3); /* Chuyển sang màu viền đen */
 }

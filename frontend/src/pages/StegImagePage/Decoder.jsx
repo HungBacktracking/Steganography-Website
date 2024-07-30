@@ -76,7 +76,7 @@ const Decoder = ({ setActiveTab }) => {
     const element = document.createElement("a");
     const file = new Blob([message], { type: 'text/plain' });
     element.href = URL.createObjectURL(file);
-    element.download = "message.txt";
+    element.download = "message_image.txt";
     document.body.appendChild(element); // Required for this to work in FireFox
     element.click();
   }
