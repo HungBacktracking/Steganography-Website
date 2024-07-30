@@ -26,15 +26,15 @@ const encode = async (videoDatabase64, textData, password) => {
     toast.error("No video to encode. Please try again.");
     return;
   } 
-  let data = null;
 
-  const textDataEncode = new TextDataEncode(message, password);
-  const cipherText = textDataEncode.encrypt();
-  data = await VideoServices.embeddMessage(base64Encodedata, cipherText);
-  const downloadLink = document.createElement('a');
-  downloadLink.href = data.audio;
-  downloadLink.download = 'encoded_video.wav';
-  downloadLink.click();
+  const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+  await wait(2000);
+
+  let data = {video: videoDatabase64};
+
+  // const textDataEncode = new TextDataEncode(message, password);
+  // const cipherText = textDataEncode.encrypt();
+  // data = await VideoServices.embeddMessage(base64Encodedata, cipherText);
   return data;
 }
 
@@ -91,162 +91,6 @@ const Encoder = ({ setActiveTab }) => {
   /* #endregion */
 
   /* #region Child Component */
-  const EncoderLeftComponent = ({
-    togglePopup,
-    videoData, setVideoData
-  }) => {
-
-    const fileInput = useRef(null);
-
-    const readDataUploaded = (e) => {
-      const file = e.target.files[0];
-
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = async (e) => {
-          const base64encode = e.target.result;
-          const video = new VideoData({
-            base64encode,
-            name: file.name,
-            size: (file.size / (1024 ** 3)).toFixed(2) + " GB",
-            format: file.type,
-          });
-          setVideoData(video);
-        };
-        reader.readAsDataURL(file);
-      }
-      else {
-        toast.error("Failed to upload file. Please try again.");
-        return;
-      }
-    };
-
-    return (
-      <div className={classes.left}>
-        {/* Video Container */}
-        <div className={`${classes.video_container}`}>
-          { 
-            videoData.base64encode ? ( 
-              <video className={classes.video} controls>
-                <source src={videoData.base64encode} type={videoData.format} />
-              </video>
-              ) : (
-              <UploadComponent readDataUploaded={readDataUploaded} fileInput={fileInput} fileAccepted={"video/*"} />
-            )
-          }
-        </div>
-
-        {/* Resolution */}
-        {/* <TwoSideTextBox
-          titleComponent={<div className="basis-1/3" >Resolution</div>}
-          content={videoData.resolution}
-        /> */}
-
-        {/* Format */}
-        <TwoSideTextBox
-          titleComponent={<div className="basis-1/3" >Format</div>}
-          content={videoData.format}
-        />
-
-        {/* Size */}
-        <TwoSideTextBox
-          titleComponent={<div className="basis-1/3" >Size</div>}
-          content={videoData.size}
-        />
-
-        <div className={classes.action}>
-          {/* Encode button */}
-          <div
-            className={`${classes.button_action_1} ${classes.success_}`}
-            onClick={() => togglePopup(PASSWORD_POPUP)}
-          >
-            Encode
-          </div>
-
-          {/* Delete button */}
-          <div 
-            className={`${classes.button_action_1} ${classes.destroy_}`} 
-            onClick={() => {setVideoData(new VideoData({})); setMessage({}); textareaRef.current.value = ""}}
-          >
-            Delete
-          </div>
-        
-        </div>
-      </div>
-    );
-  }
-
-  const EncoderRightComponent = ({
-    handleChooseFile,
-    textareaRef,
-  }) => {
-    const [textData, setTextData] = useState(textareaRef.current?.value || "");
-    const handleFileChange = async (e) => {
-      if (!e.target.files || e.target.files.length === 0) return;
-
-      const file = e.target.files[0];
-      // console.log("File Choose: ", file);
-
-      // Check Condition
-      const checkError = EncodeVideoFile.checkFileError(file);
-      if (checkError) {
-        toast.error(checkError);
-        return;
-      }
-
-      // Read the file
-      let readFileResponse = await EncodeVideoFile.readFile(file);
-      if (readFileResponse.error) {
-        toast.error(readFileResponse.error);
-        return;
-      }
-
-      let fileObject = readFileResponse.data;
-      handleChooseFile(fileObject);
-    }
-
-
-    return (
-      <div className={classes.right}>
-        <div className={classes.header_notepad}>
-          <div className={classes.small_title}>Notepad</div>
-          <div className={`${classes.action_list} ms-auto`}>
-            <div className={classes.button_action_2}
-              onClick={(e) => {
-                e.target.nextElementSibling.click();
-              }}>
-              Open
-            </div>
-            <input type="file" style={{ display: 'none' }}
-              accept=".txt"
-              onChange={handleFileChange}
-              multiple={false}
-            />
-            <div className={classes.button_action_2} 
-              onClick={() => {setMessage({}); textareaRef.current.value = ""}}
-            >
-              New
-            </div>
-          </div>
-        </div>
-        <textarea
-          className={classes.notepad}
-          ref={textareaRef}
-          value={textData}
-          onChange={(e) => setTextData(e.target.value)}
-        >
-        </textarea>
-        <div className={classes.info_list + " mt-auto"}>
-          {/* Capacity */}
-          <TwoSideTextBox className={"flex-[70%] p-[0.7vw]"} title="Capacity"
-            content={message.size ? `${message.size}B` : `N/A`}
-          />
-          {/* File name */}
-          <TwoSideTextBox className={"flex-[70%] p-[0.7vw]"} title="File name" content={message.name || `N/A`} />
-        </div>
-      </div>
-    )
-  }
   /* #endregion */
 
   return (
@@ -267,6 +111,7 @@ const Encoder = ({ setActiveTab }) => {
         <EncoderRightComponent
           handleChooseFile={handleChooseFile}
           textareaRef={textareaRef}
+          message={message}
         />
       </div>
 
@@ -289,6 +134,166 @@ const Encoder = ({ setActiveTab }) => {
         {
           isEncoding && <Spinner />
         }
+      </div>
+    </div>
+  )
+}
+
+
+const EncoderLeftComponent = ({
+  togglePopup,
+  videoData, setVideoData
+}) => {
+
+  const fileInput = useRef(null);
+
+  const readDataUploaded = (e) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const base64encode = e.target.result;
+        // console.log({base64encode});
+        const video = new VideoData({
+          base64encode,
+          name: file.name,
+          size: (file.size / (1024 ** 3)).toFixed(2) + " GB",
+          format: file.type,
+        });
+        setVideoData(video);
+      };
+      reader.readAsDataURL(file);
+    }
+    else {
+      toast.error("Failed to upload file. Please try again.");
+      return;
+    }
+  };
+
+  return (
+    <div className={classes.left}>
+      {/* Video Container */}
+      <div className={`${classes.video_container}`}>
+        { 
+          videoData.base64encode ? ( 
+            <video className={classes.video} controls>
+              <source src={videoData.base64encode} type={videoData.format} />
+            </video>
+            ) : (
+            <UploadComponent readDataUploaded={readDataUploaded} fileInput={fileInput} fileAccepted={"video/*"} />
+          )
+        }
+      </div>
+
+      {/* Resolution */}
+      {/* <TwoSideTextBox
+        titleComponent={<div className="basis-1/3" >Resolution</div>}
+        content={videoData.resolution}
+      /> */}
+
+      {/* Format */}
+      <TwoSideTextBox
+        titleComponent={<div className="basis-1/3" >Format</div>}
+        content={videoData.format}
+      />
+
+      {/* Size */}
+      <TwoSideTextBox
+        titleComponent={<div className="basis-1/3" >Size</div>}
+        content={videoData.size}
+      />
+
+      <div className={classes.action}>
+        {/* Encode button */}
+        <div
+          className={`${classes.button_action_1} ${classes.success_}`}
+          onClick={() => togglePopup(PASSWORD_POPUP)}
+        >
+          Encode
+        </div>
+
+        {/* Delete button */}
+        <div 
+          className={`${classes.button_action_1} ${classes.destroy_}`} 
+          onClick={() => {setVideoData(new VideoData({})); setMessage({}); textareaRef.current.value = ""}}
+        >
+          Delete
+        </div>
+      
+      </div>
+    </div>
+  );
+}
+
+const EncoderRightComponent = ({
+  handleChooseFile,
+  textareaRef,
+  message
+}) => {
+  const [textData, setTextData] = useState(textareaRef.current?.value || "");
+  const handleFileChange = async (e) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+
+    const file = e.target.files[0];
+    // console.log("File Choose: ", file);
+
+    // Check Condition
+    const checkError = EncodeVideoFile.checkFileError(file);
+    if (checkError) {
+      toast.error(checkError);
+      return;
+    }
+
+    // Read the file
+    let readFileResponse = await EncodeVideoFile.readFile(file);
+    if (readFileResponse.error) {
+      toast.error(readFileResponse.error);
+      return;
+    }
+
+    let fileObject = readFileResponse.data;
+    handleChooseFile(fileObject);
+  }
+
+
+  return (
+    <div className={classes.right}>
+      <div className={classes.header_notepad}>
+        <div className={classes.small_title}>Notepad</div>
+        <div className={`${classes.action_list} ms-auto`}>
+          <div className={classes.button_action_2}
+            onClick={(e) => {
+              e.target.nextElementSibling.click();
+            }}>
+            Open
+          </div>
+          <input type="file" style={{ display: 'none' }}
+            accept=".txt"
+            onChange={handleFileChange}
+            multiple={false}
+          />
+          <div className={classes.button_action_2} 
+            onClick={() => {setMessage({}); textareaRef.current.value = ""}}
+          >
+            New
+          </div>
+        </div>
+      </div>
+      <textarea
+        className={classes.notepad}
+        ref={textareaRef}
+        value={textData}
+        onChange={(e) => setTextData(e.target.value)}
+      >
+      </textarea>
+      <div className={classes.info_list + " mt-auto"}>
+        {/* Capacity */}
+        <TwoSideTextBox className={"flex-[70%] p-[0.7vw]"} title="Capacity"
+          content={message.size ? `${message.size}B` : `N/A`}
+        />
+        {/* File name */}
+        <TwoSideTextBox className={"flex-[70%] p-[0.7vw]"} title="File name" content={message.name || `N/A`} />
       </div>
     </div>
   )
